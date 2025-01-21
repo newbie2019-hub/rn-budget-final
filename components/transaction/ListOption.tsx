@@ -2,6 +2,7 @@ import { TouchableOpacity } from 'react-native'
 import React, { ReactNode } from 'react'
 import { FONT_SIZE } from '@/constants/styling'
 import { View, Text } from '@/components/themed'
+import { useThemeColor } from '@/hooks/useThemeColor'
 
 interface ListOptionProps {
   label: string
@@ -18,13 +19,15 @@ const ListOption = ({
   icon,
   renderItem,
 }: ListOptionProps) => {
+  const borderColor = useThemeColor({}, 'borderColor')
+
   return (
     <View
       style={{
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 19,
-        borderTopColor: '#d4d4d4',
+        borderTopColor: borderColor,
         borderTopWidth: 1,
         gap: 14,
         paddingHorizontal: 12,

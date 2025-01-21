@@ -1,9 +1,8 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text } from '@/components/themed'
 
 const Wallet = () => {
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Text>Wallet</Text>
     </View>
   )

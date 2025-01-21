@@ -1,9 +1,9 @@
-import { View, Text } from 'react-native'
+import { View, Text } from '@/components/themed'
 import React from 'react'
 
 const Analytics = () => {
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Text>Analytics</Text>
     </View>
   )

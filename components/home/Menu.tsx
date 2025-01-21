@@ -11,7 +11,6 @@ const ICON_SIZE = 20
 
 const Menu = () => {
   const color = useThemeColor({}, 'text')
-  const secondaryBg = useThemeColor({}, 'secondaryBackground')
 
   return (
     <View
@@ -79,8 +78,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 6,
-    paddingVertical: 14,
+    paddingVertical: 20,
   },
   option: {
     flex: 1,

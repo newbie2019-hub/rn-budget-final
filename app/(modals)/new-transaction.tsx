@@ -42,6 +42,7 @@ const options: Options = [
 
 const NewTransaction = () => {
   const router = useRouter()
+  const textColor = useThemeColor({}, 'text')
   const color = useThemeColor({}, 'placeholder')
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
@@ -166,7 +167,7 @@ const NewTransaction = () => {
                   <TextInput
                     defaultValue="Hello World"
                     placeholder="Enter your note here"
-                    style={{ fontSize: FONT_SIZE.PARAGRAPH }}
+                    style={{ fontSize: FONT_SIZE.PARAGRAPH, color: textColor }}
                     maxLength={30}
                   />
                 }

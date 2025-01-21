@@ -13,6 +13,7 @@ import { BlurView } from 'expo-blur'
 import { Feather } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import { Colors } from '@/constants/Colors'
+import { useThemeColor } from '@/hooks/useThemeColor'
 
 function TabBar({
   state,
@@ -22,6 +23,7 @@ function TabBar({
 }: BottomTabBarProps & { showLabel?: boolean }) {
   const { colors } = useTheme()
   const { buildHref } = useLinkBuilder()
+  const shadowColor = useThemeColor({}, 'shadowColor')
 
   const [dimensions, setDimensions] = useState({ height: 20, width: 100 })
 
@@ -47,10 +49,10 @@ function TabBar({
   return (
     <View
       onLayout={onTabbarLayout}
-      style={style.tabBar}
+      style={[style.tabBar, { shadowColor: shadowColor }]}
     >
       <BlurView
-        intensity={25}
+        intensity={16}
         style={{
           ...StyleSheet.absoluteFillObject,
           backgroundColor: 'transparent',
@@ -171,19 +173,18 @@ export default TabBar
 const style = StyleSheet.create({
   tabBar: {
     position: 'absolute',
-    bottom: 35,
+    bottom: 40,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: 'transparent',
     width: '80%',
     left: 45,
-    shadowColor: '#000',
     borderRadius: 40,
     paddingVertical: 10,
-    shadowOffset: { width: 0, height: 8 },
+    shadowOffset: { width: 0, height: 10 },
     shadowRadius: 20,
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.14,
   },
   tabBarItem: {
     flex: 1,

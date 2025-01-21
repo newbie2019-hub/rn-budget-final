@@ -33,3 +33,6 @@ export const transactions = sqliteTable('transactions', {
     .references(() => wallet.id),
   ...timestamp
 })
+
+
+export type Categories = typeof categories.$inferSelect

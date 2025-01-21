@@ -8,6 +8,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated'
 import { View, Text } from './themed'
+import { useThemeColor } from '@/hooks/useThemeColor'
 
 interface PressableButtonProps {
   options: {
@@ -23,6 +24,7 @@ const width = [82, 80, 78]
 const PressableButton = ({ options, value, onPress }: PressableButtonProps) => {
   const selectedPositionX = useSharedValue(0)
   const [currentIndex, setCurrentIndex] = useState(0)
+  const chipColor = useThemeColor({}, 'chipColor')
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: selectedPositionX.value }],
@@ -76,7 +78,7 @@ const PressableButton = ({ options, value, onPress }: PressableButtonProps) => {
           animatedStyle,
           {
             position: 'absolute',
-            backgroundColor: '#c3cfd9',
+            backgroundColor: chipColor,
             opacity: 0.45,
             borderRadius: 30,
             top: 3,

@@ -2,7 +2,6 @@ import { TouchableOpacity } from 'react-native'
 import { View, Text } from './themed'
 import React from 'react'
 import { FONT_SIZE } from '@/constants/styling'
-import { SUBTLE_DARK } from '@/constants/Colors'
 import { formatCurrency } from 'react-native-format-currency'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemeColor } from '@/hooks/useThemeColor'
@@ -26,7 +25,7 @@ const ListTransaction = ({
           flexDirection: 'row',
           justifyContent: 'space-between',
           gap: 4,
-          marginVertical: 8,
+          marginVertical: 12,
         }}
         type="secondaryBackground"
       >

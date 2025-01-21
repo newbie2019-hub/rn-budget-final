@@ -7,7 +7,7 @@ import Animated, { LinearTransition } from 'react-native-reanimated'
 import ListTransaction from '../ListTransaction'
 import { useThemeColor } from '@/hooks/useThemeColor'
 
-const BORDER_RADIUS = 16
+const BORDER_RADIUS = 14
 
 const fakeTransactions = [
   {
@@ -107,6 +107,7 @@ const Transactions = () => {
   const [search, setSearch] = useState('')
 
   const color = useThemeColor({}, 'text')
+  const shadowColor = useThemeColor({}, 'shadowColor')
 
   return (
     <View
@@ -114,20 +115,25 @@ const Transactions = () => {
         flex: 1,
         borderTopLeftRadius: BORDER_RADIUS,
         borderTopRightRadius: BORDER_RADIUS,
-        backgroundColor: 'white',
-        shadowColor: '#000',
+        shadowColor: shadowColor,
         shadowOffset: {
           width: 0,
           height: 1,
         },
-        shadowOpacity: 0.22,
+        shadowOpacity: 0.2,
         shadowRadius: 2.22,
         elevation: 3,
       }}
       type="secondaryBackground"
     >
       <View
-        style={{ paddingTop: 24, paddingHorizontal: 24, flex: 1 }}
+        style={{
+          paddingTop: 28,
+          paddingHorizontal: 24,
+          flex: 1,
+          borderTopLeftRadius: BORDER_RADIUS,
+          borderTopRightRadius: BORDER_RADIUS,
+        }}
         type="secondaryBackground"
       >
         <View
@@ -153,7 +159,7 @@ const Transactions = () => {
           icon={
             <EvilIcons
               name="search"
-              size={22}
+              size={25}
               color={color}
             />
           }
@@ -167,6 +173,8 @@ const Transactions = () => {
             renderItem={({ item }) => renderItem(item)}
             itemLayoutAnimation={LinearTransition}
             fadingEdgeLength={40}
+            showsVerticalScrollIndicator={false}
+            keyboardDismissMode={'on-drag'}
           />
         </View>
       </View>

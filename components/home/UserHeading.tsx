@@ -1,10 +1,14 @@
 import { TouchableOpacity } from 'react-native'
 import Feather from '@expo/vector-icons/Feather'
 import Ionicons from '@expo/vector-icons/Ionicons'
+
 import { Text, View } from '../themed'
 import { DEFAULT_ICON_COLOR, FONT_SIZE, ICON_SIZE } from '@/constants/styling'
+import { useThemeColor } from '@/hooks/useThemeColor'
 
 const UserHeading = () => {
+  const color = useThemeColor({}, 'text')
+
   return (
     <View
       style={{
@@ -22,14 +26,14 @@ const UserHeading = () => {
           <Feather
             name="settings"
             size={ICON_SIZE}
-            color={DEFAULT_ICON_COLOR}
+            color={color}
           />
         </TouchableOpacity>
         <TouchableOpacity>
           <Ionicons
             name="notifications-outline"
             size={ICON_SIZE}
-            color={DEFAULT_ICON_COLOR}
+            color={color}
           />
         </TouchableOpacity>
       </View>

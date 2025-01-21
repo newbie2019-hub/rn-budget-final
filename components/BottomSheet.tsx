@@ -8,6 +8,7 @@ import {
   BottomSheetProps,
   BottomSheetBackdrop,
 } from '@gorhom/bottom-sheet'
+import { useThemeColor } from '@/hooks/useThemeColor'
 
 type BottomSheetRef = {
   present: () => void
@@ -16,6 +17,8 @@ type BottomSheetRef = {
 
 const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
   function SheetModal({ children }, ref) {
+    const bgColor = useThemeColor({}, 'background')
+    const color = useThemeColor({}, 'text')
     const bottomSheetModalRef = useRef<BottomSheetModal>(null)
 
     useImperativeHandle(ref, () => ({
@@ -24,7 +27,7 @@ const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
     }))
 
     return (
-      <GestureHandlerRootView style={styles.container}>
+      <GestureHandlerRootView style={[styles.container]}>
         <BottomSheetModalProvider>
           <BottomSheetModal
             ref={bottomSheetModalRef}
@@ -33,9 +36,13 @@ const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
             index={1}
             detached
             snapPoints={['50%']}
+            handleIndicatorStyle={{ backgroundColor: color }}
+            handleStyle={{ backgroundColor: bgColor }}
             backdropComponent={BottomSheetBackdrop}
           >
-            <BottomSheetView style={styles.contentContainer}>
+            <BottomSheetView
+              style={[styles.contentContainer, { backgroundColor: bgColor }]}
+            >
               {children}
             </BottomSheetView>
           </BottomSheetModal>
