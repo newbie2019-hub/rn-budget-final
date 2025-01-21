@@ -1,45 +1,81 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import TabBar from '@/components/TabBar'
+import { Tabs } from 'expo-router'
+import { Feather, Ionicons } from '@expo/vector-icons'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
+import AntDesign from '@expo/vector-icons/AntDesign'
+import { BlurView } from 'expo-blur'
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+const TabLayout = () => {
+  const tabBarBackground = () => (
+    <BlurView
+      intensity={80}
+      style={{ backgroundColor: 'transparent' }}
+    />
+  )
 
   return (
     <Tabs
+      tabBar={(props) => <TabBar {...props} />}
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+        tabBarBackground: () => tabBarBackground(),
+        tabBarHideOnKeyboard: true,
+      }}
+    >
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ focused, color, size }) => (
+            <AntDesign
+              name="home"
+              size={size}
+              color={color}
+            />
+          ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="wallet"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Wallet',
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name="wallet-outline"
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="analytics"
+        options={{
+          title: 'Analytics',
+          tabBarIcon: ({ focused, color, size }) => (
+            <Feather
+              name="pie-chart"
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="account"
+        options={{
+          title: 'Account',
+          tabBarIcon: ({ focused, color, size }) => (
+            <MaterialCommunityIcons
+              name="account-circle-outline"
+              size={size}
+              color={color}
+            />
+          ),
         }}
       />
     </Tabs>
-  );
+  )
 }
+
+export default TabLayout
