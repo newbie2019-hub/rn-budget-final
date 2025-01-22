@@ -7,15 +7,6 @@ CREATE TABLE `categories` (
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `categories_category_unique` ON `categories` (`category`);--> statement-breakpoint
-CREATE TABLE `settings` (
-	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`currency` text DEFAULT 'USD',
-	`theme` text,
-	`created_at` integer,
-	`deleted_at` integer,
-	`updated_at` integer
-);
---> statement-breakpoint
 CREATE TABLE `transactions` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`type` text NOT NULL,
@@ -33,6 +24,10 @@ CREATE TABLE `transactions` (
 CREATE TABLE `wallets` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`wallet` text NOT NULL,
+	`theme` text NOT NULL,
+	`notes` text NOT NULL,
+	`active_at` integer,
+	`amount` integer NOT NULL,
 	`created_at` integer,
 	`deleted_at` integer,
 	`updated_at` integer

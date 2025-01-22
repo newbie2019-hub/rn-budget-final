@@ -14,3 +14,7 @@ export function useThemeColor(
     return Colors[theme][colorName];
   }
 }
+
+export const useWalletTheme = (theme: keyof typeof Colors.cards) => {
+  return Colors.cards[theme]
+}

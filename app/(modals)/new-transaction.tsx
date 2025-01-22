@@ -19,6 +19,7 @@ import BottomSheet from '@/components/BottomSheet'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { View, Text } from '@/components/themed'
 import { useThemeColor } from '@/hooks/useThemeColor'
+import RNPickerSelect from 'react-native-picker-select'
 
 type Options = {
   label: string
@@ -73,7 +74,7 @@ const NewTransaction = () => {
               backgroundColor: 'gray',
               width: 40,
               borderRadius: 20,
-              marginTop: 6,
+              marginTop: 8,
               marginHorizontal: 'auto',
             }}
           ></View>

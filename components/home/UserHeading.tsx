@@ -3,7 +3,7 @@ import Feather from '@expo/vector-icons/Feather'
 import Ionicons from '@expo/vector-icons/Ionicons'
 
 import { Text, View } from '../themed'
-import { DEFAULT_ICON_COLOR, FONT_SIZE, ICON_SIZE } from '@/constants/styling'
+import { FONT_SIZE, ICON_SIZE } from '@/constants/styling'
 import { useThemeColor } from '@/hooks/useThemeColor'
 
 const UserHeading = () => {

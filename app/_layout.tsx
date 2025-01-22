@@ -95,6 +95,14 @@ export default function RootLayout() {
               presentation: 'modal',
             }}
           />
+          <Stack.Screen
+            name="(modals)/add-wallet"
+            options={{
+              title: 'Add Account',
+              presentation: 'modal',
+              headerShown: false,
+            }}
+          />
         </Stack>
       </SQLite.SQLiteProvider>
     </Suspense>

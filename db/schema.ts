@@ -1,13 +1,6 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { timestamp } from "./column.helpers";
 
-export const settings = sqliteTable('settings', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  currency: text().default('USD'),
-  theme: text({ enum: ['system', 'dark', 'light' ]}),
-  ...timestamp
-})
-
 export const categories = sqliteTable('categories', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   category: text('category').notNull().unique(),
@@ -17,6 +10,10 @@ export const categories = sqliteTable('categories', {
 export const wallet = sqliteTable('wallets', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   wallet: text('wallet').notNull().unique(),
+  theme: text('theme').notNull(),
+  notes: text('notes').notNull(),
+  active_at: integer({ mode: 'timestamp' }),
+  amount: integer({ mode: 'number' }).notNull(),
   ...timestamp
 })
 
@@ -34,5 +31,6 @@ export const transactions = sqliteTable('transactions', {
   ...timestamp
 })
 
-
+export type Transactions = typeof transactions.$inferSelect
+export type Wallets = typeof wallet.$inferSelect
 export type Categories = typeof categories.$inferSelect
