@@ -103,6 +103,14 @@ export default function RootLayout() {
               headerShown: false,
             }}
           />
+          <Stack.Screen
+            name="(modals)/reminders"
+            options={{
+              title: 'Reminders',
+              presentation: 'modal',
+              headerShown: false,
+            }}
+          />
         </Stack>
       </SQLite.SQLiteProvider>
     </Suspense>

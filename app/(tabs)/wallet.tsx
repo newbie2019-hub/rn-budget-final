@@ -11,23 +11,49 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import * as schema from '@/db/schema'
 import { Colors } from '@/constants/Colors'
-import { Link, useFocusEffect } from 'expo-router'
+import { Link, router, useFocusEffect } from 'expo-router'
+import { eq, isNotNull, sql } from 'drizzle-orm'
+import Animated, { LinearTransition } from 'react-native-reanimated'
+import Button from '@/components/Button'
 
 const Wallet = () => {
   const db = useSQLiteContext()
   const drizzleDb = drizzle(db, { schema })
   const [wallets, setWallets] = useState<schema.Wallets[]>([])
 
-  useFocusEffect(
-    useCallback(() => {
-      const getWallets = async () => {
-        const data = await drizzleDb.query.wallet.findMany()
-        setWallets(data)
-      }
+  const fetchWallets = useCallback(() => {
+    const getWallets = async () => {
+      const data = await drizzleDb.query.wallet.findMany()
+      setWallets(data)
+    }
 
-      getWallets()
-    }, []),
-  )
+    getWallets()
+  }, [])
+
+  useFocusEffect(fetchWallets)
+
+  const handleDelete = async (id: number) => {
+    await drizzleDb
+      .delete(schema.wallet)
+      .where(eq(schema.wallet.id, id))
+      .then(() => fetchWallets())
+  }
+
+  const handleUpdate = async () => {}
+
+  const handleSetActive = async (id: number) => {
+    await drizzleDb
+      .update(schema.wallet)
+      .set({ active_at: null })
+      .where(isNotNull(schema.wallet.created_at))
+      .then(() => fetchWallets())
+
+    await drizzleDb
+      .update(schema.wallet)
+      .set({ active_at: new Date() })
+      .where(eq(schema.wallet.id, id))
+      .then(() => fetchWallets())
+  }
 
   const bgColor = useThemeColor({}, 'background')
 
@@ -36,20 +62,27 @@ const Wallet = () => {
       <SafeAreaView style={{ flex: 1, backgroundColor: bgColor }}>
         <View style={[defaultStyles.container]}>
           <Text style={{ fontSize: FONT_SIZE.HEADING }}>Accounts</Text>
-          <ScrollView
-            horizontal={true}
-            contentContainerStyle={{ gap: 8, marginTop: 16 }}
-            showsHorizontalScrollIndicator={false}
-          >
-            {wallets.length > 0 && <AddCardWallet />}
-            {wallets.map((wallet) => (
+          <Animated.FlatList
+            data={wallets}
+            renderItem={({ item }) => (
               <CardWallet
-                key={wallet.id}
-                theme={wallet.theme as keyof typeof Colors.cards}
-                wallet={wallet}
+                key={item.id}
+                theme={item.theme as keyof typeof Colors.cards}
+                wallet={item}
+                onDelete={() => handleDelete(item.id)}
+                onUpdate={handleUpdate}
+                onSetActive={() => handleSetActive(item.id)}
               />
-            ))}
-          </ScrollView>
+            )}
+            horizontal={true}
+            contentContainerStyle={{ gap: 8, marginVertical: 14 }}
+            showsHorizontalScrollIndicator={false}
+            itemLayoutAnimation={LinearTransition}
+          />
+          <Button
+            label="Add Account"
+            onPress={() => router.push('/(modals)/add-wallet')}
+          />
           {wallets.length === 0 && (
             <View
               style={{
@@ -59,9 +92,9 @@ const Wallet = () => {
               }}
             >
               <Link href={'/(modals)/add-wallet'}>
-                <Text>Add Account</Text>
+                <Text style={{ color: '#4c8df5' }}>Add Account</Text>
               </Link>
-              <Text>No Accounts Added 🙁</Text>
+              <Text style={{ marginTop: 12 }}>No Accounts Added 🙁</Text>
             </View>
           )}
         </View>

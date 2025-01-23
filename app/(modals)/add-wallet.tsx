@@ -144,7 +144,6 @@ const NewTransaction = () => {
                     maxLength={30}
                   />
                 }
-                onPress={() => router.push('/(modals)/change-wallet')}
               />
               <ListOption
                 icon={

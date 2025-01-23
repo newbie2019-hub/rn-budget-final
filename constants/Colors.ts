@@ -4,14 +4,17 @@ const tintColorDark = '#fff';
 export const DEFAULT_BG = '#F2F2F2'
 export const CUSTOM_BG = '#eef3f7'
 export const SUBTLE_DARK = '#1f1f1f'
+export const PRIMARY = '#2658e0'
 
 export const Colors = {
   light: {
     text: '#11181C',
+    textSecondary: '',
     gray: '#424242',
     background: '#eef3f7',
     secondaryBackground: '#fff',
     borderColor: '#d4d4d4',
+    navBorder: '#f0f0f0',
     shadowColor: '#000',
     chipColor: '#c3cfd9',
     placeholder: '#dedede',
@@ -24,8 +27,10 @@ export const Colors = {
   },
   dark: {
     text: '#ECEDEE',
+    textSecondary: '#8a8a8a',
     gray: '#424242',
     background: '#151718',
+    navBorder: '#38383838',
     secondaryBackground: '#1f1f1f',
     borderColor: '#242424',
     chipColor: '#404040',
@@ -36,8 +41,7 @@ export const Colors = {
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
     addWalletBg: '#262626',
-    inActive: '#616161'
-
+    inActive: '#616161',
   },
   cards: {
     xhanthous: {

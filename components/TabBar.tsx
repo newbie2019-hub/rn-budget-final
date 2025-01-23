@@ -23,7 +23,9 @@ function TabBar({
 }: BottomTabBarProps & { showLabel?: boolean }) {
   const { colors } = useTheme()
   const { buildHref } = useLinkBuilder()
+
   const shadowColor = useThemeColor({}, 'shadowColor')
+  const borderColor = useThemeColor({}, 'navBorder')
 
   const [dimensions, setDimensions] = useState({ height: 20, width: 100 })
 
@@ -49,7 +51,10 @@ function TabBar({
   return (
     <View
       onLayout={onTabbarLayout}
-      style={[style.tabBar, { shadowColor: shadowColor }]}
+      style={[
+        style.tabBar,
+        { shadowColor: shadowColor, borderColor: borderColor, borderWidth: 2 },
+      ]}
     >
       <BlurView
         intensity={16}
@@ -182,9 +187,9 @@ const style = StyleSheet.create({
     left: 45,
     borderRadius: 40,
     paddingVertical: 10,
-    shadowOffset: { width: 0, height: 10 },
-    shadowRadius: 20,
-    shadowOpacity: 0.14,
+    shadowOffset: { width: 0, height: 8 },
+    shadowRadius: 10,
+    shadowOpacity: 0.1,
   },
   tabBarItem: {
     flex: 1,

@@ -13,9 +13,19 @@ interface CardWalletProps {
   theme: keyof typeof Colors.cards
   isActive?: boolean
   wallet: Wallets
+  onDelete: () => void
+  onUpdate: () => void
+  onSetActive: () => void
 }
 
-const CardWallet = ({ theme, isActive, wallet }: CardWalletProps) => {
+const CardWallet = ({
+  theme,
+  isActive,
+  wallet,
+  onDelete,
+  onUpdate,
+  onSetActive,
+}: CardWalletProps) => {
   const date = new Date(wallet.created_at!)
   const formattedDate = new Intl.DateTimeFormat('en-US', {
     month: '2-digit',
@@ -30,7 +40,11 @@ const CardWallet = ({ theme, isActive, wallet }: CardWalletProps) => {
   })
 
   return (
-    <WalletContext>
+    <WalletContext
+      onSetActive={onSetActive}
+      onDelete={onDelete}
+      onUpdate={onUpdate}
+    >
       <View
         style={[
           styles.card,
@@ -38,7 +52,7 @@ const CardWallet = ({ theme, isActive, wallet }: CardWalletProps) => {
             backgroundColor: themeData.background,
             justifyContent: 'space-between',
           },
-          isActive ? styles.active : null,
+          wallet.active_at ? styles.active : null,
         ]}
       >
         <View
