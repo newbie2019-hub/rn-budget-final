@@ -15,16 +15,16 @@ PODS:
     - ExpoModulesCore
   - Expo (52.0.25):
     - ExpoModulesCore
-  - expo-dev-client (5.0.9):
+  - expo-dev-client (5.0.10):
     - EXManifests
     - expo-dev-launcher
     - expo-dev-menu
     - expo-dev-menu-interface
     - EXUpdatesInterface
-  - expo-dev-launcher (5.0.23):
+  - expo-dev-launcher (5.0.25):
     - DoubleConversion
     - EXManifests
-    - expo-dev-launcher/Main (= 5.0.23)
+    - expo-dev-launcher/Main (= 5.0.25)
     - expo-dev-menu
     - expo-dev-menu-interface
     - ExpoModulesCore
@@ -50,7 +50,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-launcher/Main (5.0.23):
+  - expo-dev-launcher/Main (5.0.25):
     - DoubleConversion
     - EXManifests
     - expo-dev-launcher/Unsafe
@@ -79,7 +79,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-launcher/Unsafe (5.0.23):
+  - expo-dev-launcher/Unsafe (5.0.25):
     - DoubleConversion
     - EXManifests
     - expo-dev-menu
@@ -107,10 +107,10 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-menu (6.0.16):
+  - expo-dev-menu (6.0.18):
     - DoubleConversion
-    - expo-dev-menu/Main (= 6.0.16)
-    - expo-dev-menu/ReactNativeCompatibles (= 6.0.16)
+    - expo-dev-menu/Main (= 6.0.18)
+    - expo-dev-menu/ReactNativeCompatibles (= 6.0.18)
     - glog
     - hermes-engine
     - RCT-Folly (= 2024.01.01.00)
@@ -130,8 +130,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-menu-interface (1.9.2)
-  - expo-dev-menu/Main (6.0.16):
+  - expo-dev-menu-interface (1.9.3)
+  - expo-dev-menu/Main (6.0.18):
     - DoubleConversion
     - EXManifests
     - expo-dev-menu-interface
@@ -157,7 +157,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-menu/ReactNativeCompatibles (6.0.16):
+  - expo-dev-menu/ReactNativeCompatibles (6.0.18):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -178,7 +178,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-menu/SafeAreaView (6.0.16):
+  - expo-dev-menu/SafeAreaView (6.0.18):
     - DoubleConversion
     - ExpoModulesCore
     - glog
@@ -200,7 +200,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-menu/Vendored (6.0.16):
+  - expo-dev-menu/Vendored (6.0.18):
     - DoubleConversion
     - expo-dev-menu/SafeAreaView
     - glog
@@ -2501,10 +2501,10 @@ SPEC CHECKSUMS:
   EXJSONUtils: 01fc7492b66c234e395dcffdd5f53439c5c29c93
   EXManifests: 81324537a654111964f6e7994dbc351a4233dcfa
   Expo: 377cc60ce8c9030cf52e36987ab3ce099ab9006e
-  expo-dev-client: dd1a126aea7831ee91a217fd4d00760d06f5a084
-  expo-dev-launcher: c1868c997a212cd67d3da2fab39c139ceb1b9fca
-  expo-dev-menu: 9538ce6956e8165d13e16250385d7d9d19dbdc52
-  expo-dev-menu-interface: 4baf2f8b3b79ce37cf4b900e4b3ba6df3384f0a1
+  expo-dev-client: a02392060ef8016e11facebb6f81ff172b39775f
+  expo-dev-launcher: edecd03a5fa273a831accb92c91aa5f03cb64d78
+  expo-dev-menu: f4789f284d2fa7b237eaf502abc6d0ba9de91052
+  expo-dev-menu-interface: 00dc42302a72722fdecec3fa048de84a9133bcc4
   ExpoAsset: 6cc988c426b5fc997859cc0f8f6728d1376bf53f
   ExpoBlur: 5327b09a58e04e4066dd95fe994d8ef5539a1f26
   ExpoFileSystem: a0a5c44d3d3e8a2aa54fe7c70c7690df03cf4dd8

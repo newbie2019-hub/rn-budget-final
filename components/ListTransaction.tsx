@@ -5,18 +5,19 @@ import { FONT_SIZE } from '@/constants/styling'
 import { formatCurrency } from 'react-native-format-currency'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemeColor } from '@/hooks/useThemeColor'
+import { Transactions } from '@/db/schema'
 
 const ListTransaction = ({
-  amount,
-  type,
-  category,
-  createdAt,
+  transaction,
   handleOnPress,
-}: ListTransaction & { handleOnPress: () => void }) => {
+}: {
+  transaction: Transactions
+  handleOnPress: () => void
+}) => {
   const color = useThemeColor({}, 'text')
 
   const [valueFormattedWithSymbol, valueFormattedWithoutSymbol, symbol] =
-    formatCurrency({ amount: +amount, code: 'USD' })
+    formatCurrency({ amount: +transaction.amount, code: 'USD' })
 
   return (
     <TouchableOpacity onPress={handleOnPress}>
@@ -42,9 +43,11 @@ const ListTransaction = ({
             style={{ gap: 3 }}
             type="secondaryBackground"
           >
-            <Text style={{ fontSize: FONT_SIZE.PARAGRAPH }}>{category}</Text>
+            <Text style={{ fontSize: FONT_SIZE.PARAGRAPH }}>
+              {transaction.category_id}
+            </Text>
             <Text style={{ color: 'gray', fontSize: FONT_SIZE.CHIP }}>
-              {createdAt as string}
+              {transaction.created_at?.toString()}
             </Text>
           </View>
         </View>
@@ -58,7 +61,7 @@ const ListTransaction = ({
               fontSize: FONT_SIZE.PARAGRAPH,
             }}
           >
-            {type.toLowerCase() === 'expense' ? '-' : '+'}
+            {transaction.type.toLowerCase() === 'expense' ? '-' : '+'}
             {valueFormattedWithSymbol}
           </Text>
           <Text
@@ -68,7 +71,7 @@ const ListTransaction = ({
               textAlign: 'right',
             }}
           >
-            {type}
+            {transaction.type}
           </Text>
         </View>
       </View>

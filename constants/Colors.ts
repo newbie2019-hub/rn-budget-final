@@ -31,7 +31,7 @@ export const Colors = {
     gray: '#424242',
     background: '#151718',
     navBorder: '#38383838',
-    secondaryBackground: '#1f1f1f',
+    secondaryBackground: '#242424',
     borderColor: '#242424',
     chipColor: '#404040',
     tint: tintColorDark,

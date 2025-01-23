@@ -66,10 +66,6 @@ export default function RootLayout() {
             }}
           />
           <Stack.Screen
-            name="about"
-            options={{ title: 'About' }}
-          />
-          <Stack.Screen
             name="index"
             options={{ title: 'Home' }}
           />
@@ -107,6 +103,14 @@ export default function RootLayout() {
             name="(modals)/reminders"
             options={{
               title: 'Reminders',
+              presentation: 'modal',
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="(modals)/about"
+            options={{
+              title: 'About Kaperas',
               presentation: 'modal',
               headerShown: false,
             }}

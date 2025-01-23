@@ -1,18 +1,16 @@
 import { View, Text } from '@/components/themed'
-import AddCardWallet from '@/components/wallet/AddCardWallet'
 import CardWallet from '@/components/wallet/CardWallet'
 import { defaultStyles, FONT_SIZE } from '@/constants/styling'
-import { useThemeColor, useWalletTheme } from '@/hooks/useThemeColor'
-import { drizzle, useLiveQuery } from 'drizzle-orm/expo-sqlite'
+import { useThemeColor } from '@/hooks/useThemeColor'
+import { drizzle } from 'drizzle-orm/expo-sqlite'
 import { useSQLiteContext } from 'expo-sqlite'
-import { useCallback, useEffect, useState } from 'react'
-import { ScrollView } from 'react-native'
+import { useCallback, useState } from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import * as schema from '@/db/schema'
 import { Colors } from '@/constants/Colors'
 import { Link, router, useFocusEffect } from 'expo-router'
-import { eq, isNotNull, sql } from 'drizzle-orm'
+import { eq, isNotNull } from 'drizzle-orm'
 import Animated, { LinearTransition } from 'react-native-reanimated'
 import Button from '@/components/Button'
 
@@ -23,8 +21,19 @@ const Wallet = () => {
 
   const fetchWallets = useCallback(() => {
     const getWallets = async () => {
-      const data = await drizzleDb.query.wallet.findMany()
-      setWallets(data)
+      const data = await drizzleDb.query.wallet.findMany({
+        orderBy: (wallets, { desc }) => [desc(wallets.created_at)],
+      })
+
+      setWallets(
+        data.sort((a, b) => {
+          // Check if active_at is null or empty and prioritize non-null/non-empty first
+          if (a.active_at && !b.active_at) return -1
+          if (!a.active_at && b.active_at) return 1
+
+          return 0
+        }),
+      )
     }
 
     getWallets()
@@ -61,7 +70,7 @@ const Wallet = () => {
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: bgColor }}>
       <SafeAreaView style={{ flex: 1, backgroundColor: bgColor }}>
         <View style={[defaultStyles.container]}>
-          <Text style={{ fontSize: FONT_SIZE.HEADING }}>Accounts</Text>
+          <Text style={{ fontSize: FONT_SIZE.HEADING }}>Wallets</Text>
           <Animated.FlatList
             data={wallets}
             renderItem={({ item }) => (
@@ -80,7 +89,7 @@ const Wallet = () => {
             itemLayoutAnimation={LinearTransition}
           />
           <Button
-            label="Add Account"
+            label="Add Wallet"
             onPress={() => router.push('/(modals)/add-wallet')}
           />
           {wallets.length === 0 && (

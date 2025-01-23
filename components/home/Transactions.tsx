@@ -6,6 +6,7 @@ import { useState } from 'react'
 import Animated, { LinearTransition } from 'react-native-reanimated'
 import ListTransaction from '../ListTransaction'
 import { useThemeColor } from '@/hooks/useThemeColor'
+import { Transactions as TransactionType } from '@/db/schema'
 
 const BORDER_RADIUS = 14
 
@@ -96,14 +97,18 @@ const fakeTransactions = [
   },
 ]
 
-const renderItem = (item: ListTransaction) => (
+const renderItem = (transaction: TransactionType) => (
   <ListTransaction
-    {...item}
+    transaction={transaction}
     handleOnPress={() => alert('Hello World')}
   />
 )
 
-const Transactions = () => {
+const Transactions = ({
+  transactions,
+}: {
+  transactions: TransactionType[]
+}) => {
   const [search, setSearch] = useState('')
 
   const color = useThemeColor({}, 'text')
@@ -128,7 +133,7 @@ const Transactions = () => {
     >
       <View
         style={{
-          paddingTop: 28,
+          paddingTop: 24,
           paddingHorizontal: 24,
           flex: 1,
           borderTopLeftRadius: BORDER_RADIUS,
@@ -140,7 +145,7 @@ const Transactions = () => {
           style={{
             justifyContent: 'space-between',
             flexDirection: 'row',
-            marginBottom: 14,
+            marginBottom: 12,
             alignItems: 'center',
           }}
           type="secondaryBackground"
@@ -151,32 +156,47 @@ const Transactions = () => {
           <Text style={{ fontSize: FONT_SIZE.CHIP }}>View All</Text>
         </View>
 
-        <FormInput
-          placeholder="Search"
-          value={search}
-          onChange={setSearch}
-          clearable
-          icon={
-            <EvilIcons
-              name="search"
-              size={25}
-              color={color}
+        {transactions.length === 0 ? (
+          <View
+            style={{
+              flex: 0.7,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            type="secondaryBackground"
+          >
+            <Text>Uh oh! No transactions found.</Text>
+          </View>
+        ) : (
+          <View>
+            <FormInput
+              placeholder="Search"
+              value={search}
+              onChange={setSearch}
+              clearable
+              icon={
+                <EvilIcons
+                  name="search"
+                  size={25}
+                  color={color}
+                />
+              }
             />
-          }
-        />
-        <View
-          style={{ marginTop: 10, flex: 1, paddingBottom: 20 }}
-          type="secondaryBackground"
-        >
-          <Animated.FlatList
-            data={fakeTransactions}
-            renderItem={({ item }) => renderItem(item)}
-            itemLayoutAnimation={LinearTransition}
-            fadingEdgeLength={40}
-            showsVerticalScrollIndicator={false}
-            keyboardDismissMode={'on-drag'}
-          />
-        </View>
+            <View
+              style={{ marginTop: 10, flex: 1, paddingBottom: 20 }}
+              type="secondaryBackground"
+            >
+              <Animated.FlatList
+                data={transactions}
+                renderItem={({ item }) => renderItem(item)}
+                itemLayoutAnimation={LinearTransition}
+                fadingEdgeLength={40}
+                showsVerticalScrollIndicator={false}
+                keyboardDismissMode={'on-drag'}
+              />
+            </View>
+          </View>
+        )}
       </View>
     </View>
   )

@@ -3,7 +3,7 @@ import { View, Text } from '@/components/themed'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import Preview from '@/components/reminder/Preview'
-import { Animated, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
 import SelectableList from '@/components/SelectableList'
 import LottieView from 'lottie-react-native'
 import { useState } from 'react'
@@ -51,7 +51,7 @@ const Reminders = () => {
           </Text>
         </View>
         <View style={{ paddingHorizontal: 20, marginTop: 40 }}>
-          <View style={{ gap: 4 }}>
+          <View style={{ gap: 10 }}>
             <SelectableList
               title="Don't send"
               description="Turn off all reminders"

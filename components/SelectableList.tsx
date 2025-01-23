@@ -34,7 +34,7 @@ const SelectableList = ({
               padding: 2,
               borderRadius: BORDER_RADIUS,
             }
-          : { borderWidth: 1.5, borderColor: 'transparent', padding: 2 },
+          : {},
       ]}
     >
       <View
