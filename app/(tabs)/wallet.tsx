@@ -13,8 +13,11 @@ import { Link, router, useFocusEffect } from 'expo-router'
 import { eq, isNotNull } from 'drizzle-orm'
 import Animated, { LinearTransition } from 'react-native-reanimated'
 import Button from '@/components/Button'
+import { useAppStore } from '@/store/appStore'
 
 const Wallet = () => {
+  const currency = useAppStore((state) => state.currency)
+
   const db = useSQLiteContext()
   const drizzleDb = drizzle(db, { schema })
   const [wallets, setWallets] = useState<schema.Wallets[]>([])
@@ -81,6 +84,7 @@ const Wallet = () => {
                 onDelete={() => handleDelete(item.id)}
                 onUpdate={handleUpdate}
                 onSetActive={() => handleSetActive(item.id)}
+                currency={currency}
               />
             )}
             horizontal={true}

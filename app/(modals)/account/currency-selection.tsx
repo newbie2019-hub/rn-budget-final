@@ -2,13 +2,15 @@ import FormInput from '@/components/form/FormInput'
 import { Text, View } from '@/components/themed'
 import { FONT_SIZE } from '@/constants/styling'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import { EvilIcons } from '@expo/vector-icons'
+import { useAppStore } from '@/store/appStore'
+import { EvilIcons, Feather } from '@expo/vector-icons'
 import { useMemo, useState } from 'react'
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
 import {
   formatCurrency,
   getSupportedCurrencies,
 } from 'react-native-format-currency'
+import Animated, { LinearTransition } from 'react-native-reanimated'
 
 interface CurrencyCode {
   code: string
@@ -16,6 +18,9 @@ interface CurrencyCode {
 }
 
 const CurrencySelection = () => {
+  const currency = useAppStore((state) => state.currency)
+  const setCurrency = useAppStore((state) => state.setCurrency)
+
   const [inputValue, setInputValue] = useState('123')
   const [search, setSearch] = useState('')
 
@@ -25,13 +30,21 @@ const CurrencySelection = () => {
   const textSecondary = useThemeColor({}, 'textSecondary')
 
   const filteredCurrency = useMemo(() => {
-    return currencyCodes.filter((currency) => {
+    // Filter currencies based on the search term
+    const filtered = currencyCodes.filter((currency) => {
       return (
         currency.code.toLowerCase().includes(search.toLowerCase()) ||
         currency.name.toLowerCase().includes(search.toLowerCase())
       )
     })
-  }, [search, currencyCodes])
+
+    // Sort the filtered list and move the selected currency to the top
+    return filtered.sort((a, b) => {
+      if (a.code === currency) return -1 // Selected currency comes first
+      if (b.code === currency) return 1
+      return a.name.localeCompare(b.name) // Sort alphabetically by name
+    })
+  }, [search, currencyCodes, currency])
 
   const renderItem = ({ item }: { item: CurrencyCode }) => {
     const [valWithSymbol, valWithoutSymbol, symbol] = formatCurrency({
@@ -40,13 +53,36 @@ const CurrencySelection = () => {
     })
 
     return (
-      <TouchableOpacity activeOpacity={0.6}>
+      <TouchableOpacity
+        activeOpacity={0.6}
+        onPress={() => setCurrency(item.code)}
+      >
         <View style={styles.currencyRow}>
-          <View style={{ justifyContent: 'space-between' }}>
-            <Text style={{ fontSize: FONT_SIZE.PARAGRAPH }}>{item.code}</Text>
-            <Text style={{ color: textSecondary }}>{item.name}</Text>
+          <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
+            <View
+              style={{
+                width: 20,
+                height: 20,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Text>{symbol}</Text>
+            </View>
+            <View style={{ justifyContent: 'space-between' }}>
+              <Text style={{ fontSize: FONT_SIZE.PARAGRAPH }}>{item.code}</Text>
+              <Text style={{ color: textSecondary }}>{item.name}</Text>
+            </View>
           </View>
-          <Text> {symbol}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            {currency === item.code ? (
+              <Feather
+                name="check"
+                size={24}
+                color="#1bab3d"
+              />
+            ) : null}
+          </View>
         </View>
       </TouchableOpacity>
     )
@@ -87,7 +123,7 @@ const CurrencySelection = () => {
             />
           }
         />
-        <FlatList
+        <Animated.FlatList
           style={styles.scrollView}
           data={filteredCurrency}
           renderItem={renderItem}
@@ -95,6 +131,7 @@ const CurrencySelection = () => {
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           keyboardDismissMode="on-drag"
+          itemLayoutAnimation={LinearTransition}
         />
       </View>
     </View>
@@ -107,7 +144,7 @@ const styles = StyleSheet.create({
   scrollView: {
     height: '100%',
     marginTop: 14,
-    marginBottom: 60,
+    marginBottom: 50,
   },
   currencyRow: {
     flex: 1,

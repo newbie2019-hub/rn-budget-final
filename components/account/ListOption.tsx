@@ -6,10 +6,12 @@ const ListOption = ({
   label,
   onClick,
   value,
+  renderItem,
 }: {
   label: string
   onClick: () => void
-  value: unknown
+  value: string
+  renderItem: () => void
 }) => {
   const secondaryBg = useThemeColor({}, 'secondaryBackground')
 
@@ -19,8 +21,15 @@ const ListOption = ({
       style={{ padding: 16, backgroundColor: secondaryBg, borderRadius: 10 }}
       onPress={onClick}
     >
-      <View style={{ flexDirection: 'row', backgroundColor: secondaryBg }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          backgroundColor: secondaryBg,
+          justifyContent: 'space-between',
+        }}
+      >
         <Text style={{ fontWeight: '500' }}>{label}</Text>
+        <Text>{value}</Text>
       </View>
     </TouchableOpacity>
   )

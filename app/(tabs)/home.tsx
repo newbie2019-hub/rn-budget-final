@@ -9,8 +9,11 @@ import { useThemeColor } from '@/hooks/useThemeColor'
 import { eq, isNotNull } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/expo-sqlite'
 import * as schema from '@/db/schema'
+import { useAppStore } from '@/store/appStore'
 
 const Page = () => {
+  const currency = useAppStore((state) => state.currency)
+
   const db = useSQLiteContext()
   const drizzleDb = drizzle(db, { schema })
 
@@ -50,9 +53,15 @@ const Page = () => {
     >
       <View style={defaultStyles.container}>
         <UserHeading />
-        <Wallet wallet={activeWallet} />
+        <Wallet
+          wallet={activeWallet}
+          currency={currency}
+        />
       </View>
-      <Transactions transactions={transactions} />
+      <Transactions
+        transactions={transactions}
+        currency={currency}
+      />
     </SafeAreaView>
   )
 }

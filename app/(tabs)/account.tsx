@@ -2,12 +2,15 @@ import ListOption from '@/components/account/ListOption'
 import { Text, View } from '@/components/themed'
 import { defaultStyles, FONT_SIZE } from '@/constants/styling'
 import { useThemeColor } from '@/hooks/useThemeColor'
+import { useAppStore } from '@/store/appStore'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 const Account = () => {
+  const currency = useAppStore((state) => state.currency)
+
   const bgColor = useThemeColor({}, 'background')
   const router = useRouter()
 
@@ -47,7 +50,7 @@ const Account = () => {
             <View style={{ gap: 8, marginTop: 10 }}>
               <ListOption
                 label="Currency"
-                value="USD"
+                value={currency}
                 onClick={() =>
                   router.push('/(modals)/account/currency-selection')
                 }

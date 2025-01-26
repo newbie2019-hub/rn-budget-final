@@ -11,7 +11,13 @@ import { useThemeColor } from '@/hooks/useThemeColor'
 import Menu from './Menu'
 import { formatCurrency } from 'react-native-format-currency'
 
-const Wallet = ({ wallet }: { wallet: schema.Wallets | null }) => {
+const Wallet = ({
+  wallet,
+  currency,
+}: {
+  wallet: schema.Wallets | null
+  currency: string
+}) => {
   const color = useThemeColor({}, 'text')
   const textSecondary = useThemeColor({}, 'textSecondary')
 
@@ -19,7 +25,7 @@ const Wallet = ({ wallet }: { wallet: schema.Wallets | null }) => {
 
   const [valWithSymbol, valWithoutSymbol, symbol] = formatCurrency({
     amount: Number(wallet?.amount || 0),
-    code: 'USD',
+    code: currency,
   })
 
   return (

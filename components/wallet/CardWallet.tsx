@@ -13,6 +13,7 @@ interface CardWalletProps {
   theme: keyof typeof Colors.cards
   isActive?: boolean
   wallet: Wallets
+  currency: string
   onDelete: () => void
   onUpdate: () => void
   onSetActive: () => void
@@ -20,11 +21,11 @@ interface CardWalletProps {
 
 const CardWallet = ({
   theme,
-  isActive,
   wallet,
   onDelete,
   onUpdate,
   onSetActive,
+  currency = 'USD',
 }: CardWalletProps) => {
   const date = new Date(wallet.created_at!)
   const formattedDate = new Intl.DateTimeFormat('en-US', {
@@ -36,11 +37,12 @@ const CardWallet = ({
   const themeData = useWalletTheme(theme)
   const [valueWithSymbol] = formatCurrency({
     amount: wallet.amount,
-    code: 'USD',
+    code: currency,
   })
 
   return (
     <WalletContext
+      isActive={!!wallet.active_at}
       onSetActive={onSetActive}
       onDelete={onDelete}
       onUpdate={onUpdate}
@@ -114,7 +116,7 @@ const styles = StyleSheet.create({
     padding: 16,
     width: 160,
     borderRadius: 10,
-    height: 190,
+    height: 200,
   },
   active: {
     borderWidth: 2,
