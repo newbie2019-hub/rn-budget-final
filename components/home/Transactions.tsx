@@ -113,6 +113,7 @@ const Transactions = ({
 
   const color = useThemeColor({}, 'text')
   const shadowColor = useThemeColor({}, 'shadowColor')
+  const textSecondary = useThemeColor({}, 'textSecondary')
 
   return (
     <View
@@ -165,7 +166,7 @@ const Transactions = ({
             }}
             type="secondaryBackground"
           >
-            <Text>Uh oh! No transactions found.</Text>
+            <Text style={{ color: textSecondary }}>No transactions found</Text>
           </View>
         ) : (
           <View>

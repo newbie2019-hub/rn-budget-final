@@ -20,6 +20,7 @@ const FormInput = ({
   clearable?: boolean
 }) => {
   const color = useThemeColor({}, 'text')
+  const secondaryBackground = useThemeColor({}, 'secondaryBackground')
 
   return (
     <View
@@ -30,15 +31,24 @@ const FormInput = ({
         gap: 4,
         borderRadius: 8,
         justifyContent: 'space-between',
+        backgroundColor: secondaryBackground,
       }}
     >
-      <View style={{ flexDirection: 'row', gap: 6 }}>
-        {icon && <View>{icon}</View>}
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 6,
+          backgroundColor: secondaryBackground,
+        }}
+      >
+        {icon && (
+          <View style={{ backgroundColor: secondaryBackground }}>{icon}</View>
+        )}
         <TextInput
           value={value}
           placeholder={placeholder}
           onChangeText={onChange}
-          style={{ fontSize: FONT_SIZE.PARAGRAPH, color: color }}
+          style={{ fontSize: FONT_SIZE.PARAGRAPH, color: color, width: '90%' }}
         />
       </View>
       {clearable && value.trim().length > 0 && (

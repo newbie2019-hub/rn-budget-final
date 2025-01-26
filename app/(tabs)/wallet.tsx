@@ -88,22 +88,24 @@ const Wallet = () => {
             showsHorizontalScrollIndicator={false}
             itemLayoutAnimation={LinearTransition}
           />
-          <Button
-            label="Add Wallet"
-            onPress={() => router.push('/(modals)/add-wallet')}
-          />
+          {wallets.length > 0 && (
+            <Button
+              label="Add Wallet"
+              onPress={() => router.push('/(modals)/add-wallet')}
+            />
+          )}
           {wallets.length === 0 && (
             <View
               style={{
-                height: '100%',
+                height: '70%',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
               <Link href={'/(modals)/add-wallet'}>
-                <Text style={{ color: '#4c8df5' }}>Add Account</Text>
+                <Text style={{ color: '#4c8df5' }}>Add Wallet</Text>
               </Link>
-              <Text style={{ marginTop: 12 }}>No Accounts Added 🙁</Text>
+              <Text style={{ marginTop: 12 }}>No Wallet Added</Text>
             </View>
           )}
         </View>

@@ -46,7 +46,7 @@ function TabBar({
     }
   })
 
-  const getMultiplier = [0, 0.038, 0.82, 0.88]
+  const getMultiplier = [0, 0.018, 0.82, 0.87]
 
   return (
     <View

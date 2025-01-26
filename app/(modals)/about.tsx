@@ -2,10 +2,7 @@ import { Text, View } from '@/components/themed'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ScrollView } from 'react-native'
 import { FONT_SIZE } from '@/constants/styling'
-import { useThemeColor } from '@/hooks/useThemeColor'
 import LottieView from 'lottie-react-native'
-
-const LINE_HEIGHT = 24
 
 const About = () => {
   return (
@@ -40,18 +37,18 @@ const About = () => {
             </Text>
           </View>
           <View style={{ gap: 16, marginTop: 12 }}>
-            <Text style={{ textAlign: 'justify', lineHeight: 24 }}>
+            <Text style={{ textAlign: 'justify', lineHeight: 22 }}>
               Hi, I'm Yvan a full stack web developer. This project allowed me
               to dive into mobile development and explore technologies like
               React Native, Expo, Drizzle, and Expo SQLite, all while building
               something practical for my own use.
             </Text>
-            <Text style={{ textAlign: 'justify', lineHeight: 24 }}>
+            <Text style={{ textAlign: 'justify', lineHeight: 22 }}>
               The process of building Kaperas was both challenging and rewarding
               as it gave me the opportunity to learn, grow, and push my limits
               as a developer.
             </Text>
-            <Text style={{ textAlign: 'justify', lineHeight: 24 }}>
+            <Text style={{ textAlign: 'justify', lineHeight: 22 }}>
               I’d love to connect with like-minded individuals and share ideas,
               whether you’re a developer, designer, or someone with a great
               idea. I’d be thrilled to connect and collaborate. Let’s build
@@ -60,12 +57,8 @@ const About = () => {
           </View>
           <Text style={{ marginTop: 30 }}>Resources</Text>
           <View style={{ marginTop: 8, gap: 4 }}>
-            <Text style={{ fontSize: FONT_SIZE.DESCRIPTION }}>
-              1. LottieFiles - Wallet
-            </Text>
-            <Text style={{ fontSize: FONT_SIZE.DESCRIPTION }}>
-              2. Google Fonts - Animated Emojis
-            </Text>
+            <Text>LottieFiles - Wallet</Text>
+            <Text>Google Fonts - Animated Emojis</Text>
           </View>
         </View>
       </ScrollView>

@@ -13,17 +13,20 @@ import { formatCurrency } from 'react-native-format-currency'
 
 const Wallet = ({ wallet }: { wallet: schema.Wallets | null }) => {
   const color = useThemeColor({}, 'text')
+  const textSecondary = useThemeColor({}, 'textSecondary')
 
   const [isShown, setIsShown] = useState(true)
 
   const [valWithSymbol, valWithoutSymbol, symbol] = formatCurrency({
-    amount: Number(wallet?.amount),
+    amount: Number(wallet?.amount || 0),
     code: 'USD',
   })
 
   return (
     <View style={{ marginVertical: 20 }}>
-      <Text style={{ fontSize: FONT_SIZE.PARAGRAPH }}>Wallet Balance</Text>
+      <Text style={{ fontSize: FONT_SIZE.PARAGRAPH, color: textSecondary }}>
+        Wallet Balance
+      </Text>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
         <View style={{ flexDirection: 'row' }}>
           <Text style={{ fontSize: FONT_SIZE.AMOUNT }}>{symbol}</Text>

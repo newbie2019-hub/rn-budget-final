@@ -20,6 +20,7 @@ const TabLayout = () => {
         headerShown: false,
         tabBarBackground: () => tabBarBackground(),
         tabBarHideOnKeyboard: true,
+        animation: 'shift',
       }}
     >
       <Tabs.Screen

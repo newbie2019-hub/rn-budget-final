@@ -16,7 +16,10 @@ const Button = ({
   onPress,
 }: ButtonProps) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.7}
+    >
       <View
         style={{
           padding: 18,

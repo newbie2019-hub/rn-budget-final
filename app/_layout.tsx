@@ -57,7 +57,9 @@ export default function RootLayout() {
       >
         <StatusBar style="auto" />
         <Stack
-          screenOptions={{ contentStyle: { backgroundColor: background } }}
+          screenOptions={{
+            contentStyle: { backgroundColor: background },
+          }}
         >
           <Stack.Screen
             name="(tabs)"
@@ -111,6 +113,30 @@ export default function RootLayout() {
             name="(modals)/about"
             options={{
               title: 'About Kaperas',
+              presentation: 'modal',
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="(modals)/support/feedback"
+            options={{
+              title: 'Feedback',
+              presentation: 'modal',
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="(modals)/support/feature-request"
+            options={{
+              title: 'Feature Request',
+              presentation: 'modal',
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="(modals)/account/currency-selection"
+            options={{
+              title: 'Select Currency',
               presentation: 'modal',
               headerShown: false,
             }}

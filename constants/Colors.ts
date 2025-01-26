@@ -9,12 +9,12 @@ export const PRIMARY = '#2658e0'
 export const Colors = {
   light: {
     text: '#11181C',
-    textSecondary: '',
+    textSecondary: '#292929',
     gray: '#424242',
     background: '#eef3f7',
-    secondaryBackground: '#fff',
+    secondaryBackground: '#f7fbff',
     borderColor: '#d4d4d4',
-    navBorder: '#f0f0f0',
+    navBorder: '#f7fbff',
     shadowColor: '#000',
     chipColor: '#c3cfd9',
     placeholder: '#dedede',

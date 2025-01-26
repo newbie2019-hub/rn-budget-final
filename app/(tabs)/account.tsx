@@ -1,37 +1,17 @@
+import ListOption from '@/components/account/ListOption'
 import { Text, View } from '@/components/themed'
 import { defaultStyles, FONT_SIZE } from '@/constants/styling'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { useRouter } from 'expo-router'
-import { ScrollView, TouchableOpacity } from 'react-native'
+import { useState } from 'react'
+import { ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-
-const Option = ({
-  label,
-  onClick,
-  value,
-}: {
-  label: string
-  onClick: () => void
-  value: unknown
-}) => {
-  const secondaryBg = useThemeColor({}, 'secondaryBackground')
-
-  return (
-    <TouchableOpacity
-      activeOpacity={0.6}
-      style={{ padding: 16, backgroundColor: secondaryBg, borderRadius: 10 }}
-      onPress={onClick}
-    >
-      <View style={{ flexDirection: 'row', backgroundColor: secondaryBg }}>
-        <Text style={{ fontWeight: '500' }}>{label}</Text>
-      </View>
-    </TouchableOpacity>
-  )
-}
 
 const Account = () => {
   const bgColor = useThemeColor({}, 'background')
   const router = useRouter()
+
+  const [showResetModal, setShowResetModal] = useState(false)
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: bgColor }}>
@@ -43,17 +23,17 @@ const Account = () => {
               Account Settings
             </Text>
             <View style={{ gap: 8, marginTop: 10 }}>
-              <Option
+              <ListOption
                 label="Name"
                 value=""
                 onClick={() => alert('hi')}
               />
-              <Option
+              <ListOption
                 label="Email"
                 value=""
                 onClick={() => alert('hi')}
               />
-              <Option
+              <ListOption
                 label="Change Password"
                 value=""
                 onClick={() => alert('hi')}
@@ -65,25 +45,32 @@ const Account = () => {
               App Settings
             </Text>
             <View style={{ gap: 8, marginTop: 10 }}>
-              <Option
+              <ListOption
                 label="Currency"
                 value="USD"
-                onClick={() => alert('hi')}
+                onClick={() =>
+                  router.push('/(modals)/account/currency-selection')
+                }
               />
-              <Option
+              <ListOption
                 label="Reminder Notification"
                 value=""
                 onClick={() => router.push('/(modals)/reminders')}
               />
-              <Option
+              <ListOption
                 label="Backup & Sync Data"
                 value=""
                 onClick={() => alert('hi')}
               />
-              <Option
+              <ListOption
                 label="Reset Data"
                 value=""
-                onClick={() => alert('hi')}
+                onClick={() => setShowResetModal(true)}
+              />
+              <ListOption
+                label="App Lock"
+                value=""
+                onClick={() => alert('App Lock')}
               />
             </View>
           </View>
@@ -92,17 +79,17 @@ const Account = () => {
               App Support
             </Text>
             <View style={{ gap: 8, marginTop: 10 }}>
-              <Option
+              <ListOption
                 label="Feedback"
                 value=""
-                onClick={() => alert('hi')}
+                onClick={() => router.push('/(modals)/support/feedback')}
               />
-              <Option
+              <ListOption
                 label="Feature Request"
                 value=""
-                onClick={() => alert('hi')}
+                onClick={() => router.push('/(modals)/support/feature-request')}
               />
-              <Option
+              <ListOption
                 label="About Kaperas"
                 value=""
                 onClick={() => router.push('/(modals)/about')}

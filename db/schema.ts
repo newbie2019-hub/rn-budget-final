@@ -11,7 +11,7 @@ export const wallet = sqliteTable('wallets', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   wallet: text('wallet').notNull().unique(),
   theme: text('theme').notNull(),
-  notes: text('notes').notNull(),
+  notes: text('notes'),
   active_at: integer({ mode: 'timestamp' }),
   amount: integer({ mode: 'number' }).notNull(),
   ...timestamp

@@ -42,7 +42,7 @@ const ListOption = ({
         }}
       >
         {icon}
-        <View style={{ gap: 1 }}>
+        <View style={{ gap: 3 }}>
           <Text style={{ fontSize: FONT_SIZE.CHIP }}>{label}</Text>
           {renderItem ? (
             <>{renderItem}</>

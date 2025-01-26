@@ -180,7 +180,10 @@ const NewTransaction = () => {
             />
           </View>
         </View>
-        <BottomSheet ref={bottomSheetModalRef}>
+        <BottomSheet
+          ref={bottomSheetModalRef}
+          snapPoints={['50%']}
+        >
           <DateTimePicker
             testID="dateTimePicker"
             value={date}

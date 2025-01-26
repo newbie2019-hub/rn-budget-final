@@ -16,7 +16,7 @@ type BottomSheetRef = {
 }
 
 const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
-  function SheetModal({ children }, ref) {
+  function SheetModal({ children, snapPoints, detached }, ref) {
     const bgColor = useThemeColor({}, 'background')
     const color = useThemeColor({}, 'text')
     const bottomSheetModalRef = useRef<BottomSheetModal>(null)
@@ -34,8 +34,8 @@ const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
             enablePanDownToClose
             enableDynamicSizing
             index={1}
-            detached
-            snapPoints={['50%']}
+            snapPoints={snapPoints}
+            detached={detached}
             handleIndicatorStyle={{ backgroundColor: color }}
             handleStyle={{ backgroundColor: bgColor }}
             backdropComponent={BottomSheetBackdrop}

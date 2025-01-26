@@ -1,4 +1,4 @@
-import { TextInput, ScrollView } from 'react-native'
+import { TextInput, ScrollView, Dimensions } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import { FONT_SIZE } from '@/constants/styling'
 import ListOption from '@/components/transaction/ListOption'
@@ -13,14 +13,18 @@ import { Colors } from '@/constants/Colors'
 import { useSQLiteContext } from 'expo-sqlite'
 import { drizzle } from 'drizzle-orm/expo-sqlite'
 import * as schema from '@/db/schema'
+import { count } from 'drizzle-orm'
 
 const NewTransaction = () => {
+  const width = Dimensions.get('window').width
+
   const router = useRouter()
   const db = useSQLiteContext()
   const drizzleDb = drizzle(db, { schema })
 
   const textColor = useThemeColor({}, 'text')
   const color = useThemeColor({}, 'placeholder')
+  const textSecondary = useThemeColor({}, 'textSecondary')
 
   const [theme, setTheme] = useState<keyof typeof Colors.cards>('celadon')
   const [amount, setAmount] = useState('')
@@ -30,13 +34,29 @@ const NewTransaction = () => {
   const selectedTheme = useWalletTheme(theme)
 
   const onSubmit = useCallback(async () => {
-    await drizzleDb.insert(schema.wallet).values({
-      wallet: walletName,
-      amount: +amount,
-      notes: notes,
-      theme: theme,
-      created_at: new Date(),
-    })
+    try {
+      // Check if there is a wallet that has an active state
+      const [result] = await drizzleDb
+        .select({ count: count() })
+        .from(schema.wallet)
+
+      const wallet: Omit<schema.Wallets, 'id' | 'updated_at' | 'deleted_at'> = {
+        wallet: walletName,
+        amount: +amount,
+        notes: notes,
+        theme: theme,
+        created_at: new Date(),
+        active_at: null,
+      }
+
+      if (result.count === 0) {
+        wallet.active_at = new Date()
+      }
+
+      await drizzleDb.insert(schema.wallet).values(wallet)
+    } catch (error) {
+      console.log('Error saving wallet: ', error)
+    }
 
     router.back()
   }, [amount, notes, theme, walletName])
@@ -46,7 +66,7 @@ const NewTransaction = () => {
       keyboardDismissMode="on-drag"
       contentContainerStyle={{ flex: 1 }}
     >
-      <View style={{ flex: 0.85 }}>
+      <View style={{ flex: 0.86 }}>
         <View
           style={{
             height: 5,
@@ -62,9 +82,10 @@ const NewTransaction = () => {
             fontSize: FONT_SIZE.DESCRIPTION,
             textAlign: 'center',
             marginTop: 8,
+            color: textSecondary,
           }}
         >
-          ADD ACCOUNT
+          ADD WALLET
         </Text>
 
         <View
@@ -95,6 +116,7 @@ const NewTransaction = () => {
                 fontSize: FONT_SIZE.PARAGRAPH,
                 textAlign: 'center',
                 marginTop: 4,
+                color: textColor,
               }}
             >
               Initial Balance
@@ -140,7 +162,11 @@ const NewTransaction = () => {
                     value={walletName}
                     onChangeText={setWalletName}
                     placeholder="Wallet Name"
-                    style={{ fontSize: FONT_SIZE.PARAGRAPH, color: textColor }}
+                    style={{
+                      fontSize: FONT_SIZE.PARAGRAPH,
+                      color: textColor,
+                      width,
+                    }}
                     maxLength={30}
                   />
                 }
@@ -160,7 +186,11 @@ const NewTransaction = () => {
                     value={notes}
                     onChangeText={setNotes}
                     placeholder="Enter your note here"
-                    style={{ fontSize: FONT_SIZE.PARAGRAPH, color: textColor }}
+                    style={{
+                      fontSize: FONT_SIZE.PARAGRAPH,
+                      color: textColor,
+                      width,
+                    }}
                     maxLength={30}
                   />
                 }
