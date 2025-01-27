@@ -1,50 +1,77 @@
-# Welcome to your Expo app 👋
+# Budget Tracker App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A sleek and intuitive budget tracking app built with React Native, Expo, and Drizzle ORM. The app is designed to help users seamlessly manage their finances by tracking expenses and income, managing multiple wallets, and providing insightful analytics.
 
-## Get started
+## Features
 
-1. Install dependencies
+- **Manage Multiple Wallets**: Organize your finances by creating and managing multiple wallets.
+- **Currency Support**: Handle transactions in various currencies for global flexibility.
+- **Transactions**: Record and categorize income and expense transactions with ease.
+- **Analytics**: Visualize your financial data with insightful charts and summaries.
+- **Notifications**: Stay on top of your finances with timely reminders and updates.
+- **Data Sync & Restore**: Securely sync and restore your data across devices.
+- **Offline Support**: Enjoy uninterrupted access with Expo SQLite for offline data storage.
+- **More Features Coming Soon**: Regular updates with additional tools to enhance your budgeting experience.
+
+## Tech Stack
+
+- **React Native**: For building a performant and cross-platform mobile app.
+- **Expo**: For a seamless development and deployment experience.
+- **Expo SQLite**: For robust and offline-first data management.
+- **Drizzle ORM**: For efficient database queries and management.
+
+## Getting Started
+
+Follow these steps to set up and run the project on your local machine:
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (LTS version recommended)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/)
+- A code editor like [VS Code](https://code.visualstudio.com/)
+
+### Installation
+
+1. Clone the repository:
 
    ```bash
-   npm install
+   git clone https://github.com/your-username/budget-tracker-app.git
+   cd budget-tracker-app
    ```
 
-2. Start the app
+2. Install dependencies, and setup the project:
 
    ```bash
-    npx expo start
+   > npm install
+   > cd ios
+   > npx expo prebuild
+   > npx drizzle-kit generate
+   > pod install
    ```
 
-In the output, you'll find options to open the app in a
+3. Start the development server:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   ```bash
+   > npx expo
+   ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+4. Use the Expo Go app (iOS/Android) to scan the QR code and run the app on your device, or launch the app in an emulator.
 
-## Get a fresh project
+## License
 
-When you're ready, run:
+This project is licensed under the [MIT License](LICENSE).
 
-```bash
-npm run reset-project
-```
+## Acknowledgements
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- [React Native](https://reactnative.dev/)
+- [Expo](https://expo.dev/)
+- [Expo SQLite](https://docs.expo.dev/versions/latest/sdk/sqlite/)
+- [Drizzle ORM](https://orm.drizzle.team/)
 
-## Learn more
+## Contact
 
-To learn more about developing your project with Expo, look at the following resources:
+For questions, collaborations, or support, reach out at:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- Email: [sabayyvan2018@gmail.com](mailto\:sabayyvan2018@gmail.com)
+- GitHub: [@newbie-2019-hub](https://github.com/newbie-2019-hub)
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
