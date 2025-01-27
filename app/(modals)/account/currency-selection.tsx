@@ -21,7 +21,7 @@ const CurrencySelection = () => {
   const currency = useAppStore((state) => state.currency)
   const setCurrency = useAppStore((state) => state.setCurrency)
 
-  const [inputValue, setInputValue] = useState('123')
+  const [inputValue] = useState('1')
   const [search, setSearch] = useState('')
 
   // get all of the supported currency codes

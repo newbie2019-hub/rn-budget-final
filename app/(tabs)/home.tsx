@@ -20,24 +20,28 @@ const Page = () => {
   const bgColor = useThemeColor({}, 'background')
 
   const [activeWallet, setActiveWallet] = useState<schema.Wallets | null>(null)
-  const [transactions, setTransasctions] = useState<schema.Transactions[]>([])
+  const [transactions, setTransactions] = useState<
+    schema.TransactionsWithCategory[]
+  >([])
 
   const fetchWallets = useCallback(() => {
     const getWallets = async () => {
-      const data = await drizzleDb.query.wallet.findFirst({
-        where: isNotNull(schema.wallet.active_at),
-      })
-
-      if (data) {
-        setActiveWallet(data)
-
-        const transactionsData = await drizzleDb.query.transactions.findMany({
-          where: eq(schema.wallet.id, activeWallet?.id!),
+      try {
+        const data = await drizzleDb.query.wallet.findFirst({
+          where: isNotNull(schema.wallet.active_at),
         })
+        if (data) {
+          setActiveWallet(data)
 
-        if (transactionsData) {
-          setTransasctions(transactionsData)
+          const transactionsData = await drizzleDb.query.transactions.findMany({
+            where: eq(schema.transactions.wallet_id, data?.id!),
+            with: { category: true },
+          })
+
+          setTransactions(transactionsData)
         }
+      } catch (error) {
+        console.dir(error, { depth: 2 })
       }
     }
 

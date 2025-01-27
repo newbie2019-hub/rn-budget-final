@@ -1,4 +1,4 @@
-import { TextInput, TouchableOpacity } from 'react-native'
+import { ColorValue, TextInput, TouchableOpacity } from 'react-native'
 import AntDesign from '@expo/vector-icons/AntDesign'
 import { ReactNode } from 'react'
 import { SUBTLE_DARK } from '@/constants/Colors'
@@ -12,12 +12,14 @@ const FormInput = ({
   value,
   onChange,
   clearable,
+  backgroundColor,
 }: {
   icon?: ReactNode
   placeholder: string
   value: string
   onChange: (text: string) => void
   clearable?: boolean
+  backgroundColor?: ColorValue
 }) => {
   const color = useThemeColor({}, 'text')
   const secondaryBackground = useThemeColor({}, 'secondaryBackground')
@@ -31,18 +33,22 @@ const FormInput = ({
         gap: 4,
         borderRadius: 8,
         justifyContent: 'space-between',
-        backgroundColor: secondaryBackground,
+        backgroundColor: backgroundColor ?? secondaryBackground,
       }}
     >
       <View
         style={{
           flexDirection: 'row',
           gap: 6,
-          backgroundColor: secondaryBackground,
+          backgroundColor: backgroundColor ?? secondaryBackground,
         }}
       >
         {icon && (
-          <View style={{ backgroundColor: secondaryBackground }}>{icon}</View>
+          <View
+            style={{ backgroundColor: backgroundColor ?? secondaryBackground }}
+          >
+            {icon}
+          </View>
         )}
         <TextInput
           value={value}

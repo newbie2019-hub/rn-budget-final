@@ -6,98 +6,11 @@ import { useState } from 'react'
 import Animated, { LinearTransition } from 'react-native-reanimated'
 import ListTransaction from '../ListTransaction'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import { Transactions as TransactionType } from '@/db/schema'
+import { TransactionsWithCategory } from '@/db/schema'
 
 const BORDER_RADIUS = 14
 
-const fakeTransactions = [
-  {
-    category: 'Health Care',
-    createdAt: 'Today, 4:30 PM',
-    amount: 450,
-    type: 'Expense',
-  },
-  {
-    category: 'Internet Bill',
-    createdAt: 'Yesterday, 4:30 PM',
-    amount: 3050,
-    type: 'Expense',
-  },
-  {
-    category: 'Salary',
-    createdAt: 'Today, 2:30 PM',
-    amount: 4500,
-    type: 'Income',
-  },
-  {
-    category: 'Dental Checkup',
-    createdAt: 'Yesterday, 10:30 AM',
-    amount: 250,
-    type: 'Expense',
-  },
-  {
-    category: 'Netflix Subscription',
-    createdAt: 'Yesterday, 2:30 PM',
-    amount: 10,
-    type: 'Expense',
-  },
-  {
-    category: 'Spotify Subscription',
-    createdAt: 'Yesterday, 10:30 AM',
-    amount: 20,
-    type: 'Expense',
-  },
-  {
-    category: 'Mortgage Payment',
-    createdAt: 'Yesterday, 10:30 AM',
-    amount: 2500,
-    type: 'Expense',
-  },
-  {
-    category: 'Monthly Allowance',
-    createdAt: 'Today, 8:30 AM',
-    amount: 3000,
-    type: 'Expense',
-  },
-  {
-    category: 'Internet Bill',
-    createdAt: 'Yesterday, 4:30 PM',
-    amount: 3050,
-    type: 'Expense',
-  },
-  {
-    category: 'Salary',
-    createdAt: 'Today, 2:30 PM',
-    amount: 4500,
-    type: 'Income',
-  },
-  {
-    category: 'Internet Bill',
-    createdAt: 'Yesterday, 4:30 PM',
-    amount: 3050,
-    type: 'Expense',
-  },
-  {
-    category: 'Salary',
-    createdAt: 'Today, 2:30 PM',
-    amount: 4500,
-    type: 'Income',
-  },
-  {
-    category: 'Internet Bill',
-    createdAt: 'Yesterday, 4:30 PM',
-    amount: 3050,
-    type: 'Expense',
-  },
-  {
-    category: 'Salary',
-    createdAt: 'Today, 2:30 PM',
-    amount: 4500,
-    type: 'Income',
-  },
-]
-
-const renderItem = (transaction: TransactionType) => (
+const renderItem = (transaction: TransactionsWithCategory) => (
   <ListTransaction
     transaction={transaction}
     handleOnPress={() => alert('Hello World')}
@@ -107,11 +20,12 @@ const renderItem = (transaction: TransactionType) => (
 const Transactions = ({
   transactions,
 }: {
-  transactions: TransactionType[]
+  transactions: TransactionsWithCategory[]
 }) => {
   const [search, setSearch] = useState('')
 
   const color = useThemeColor({}, 'text')
+  const bgColor = useThemeColor({}, 'background')
   const shadowColor = useThemeColor({}, 'shadowColor')
   const textSecondary = useThemeColor({}, 'textSecondary')
 
@@ -169,12 +83,16 @@ const Transactions = ({
             <Text style={{ color: textSecondary }}>No transactions found</Text>
           </View>
         ) : (
-          <View>
+          <View
+            style={{ flex: 0.7 }}
+            type="secondaryBackground"
+          >
             <FormInput
               placeholder="Search"
               value={search}
               onChange={setSearch}
               clearable
+              backgroundColor={bgColor}
               icon={
                 <EvilIcons
                   name="search"

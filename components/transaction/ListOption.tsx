@@ -10,6 +10,7 @@ interface ListOptionProps {
   onPress?: () => void
   icon: ReactNode
   renderItem?: ReactNode
+  placeholder?: string
 }
 
 const ListOption = ({
@@ -18,7 +19,9 @@ const ListOption = ({
   onPress,
   icon,
   renderItem,
+  placeholder,
 }: ListOptionProps) => {
+  const secondaryColor = useThemeColor({}, 'textSecondary')
   const borderColor = useThemeColor({}, 'borderColor')
 
   return (
@@ -42,13 +45,23 @@ const ListOption = ({
         }}
       >
         {icon}
-        <View style={{ gap: 3 }}>
+        <View style={{ gap: 3, flex: 1 }}>
           <Text style={{ fontSize: FONT_SIZE.CHIP }}>{label}</Text>
           {renderItem ? (
             <>{renderItem}</>
-          ) : (
+          ) : value ? (
             <Text style={{ fontSize: FONT_SIZE.PARAGRAPH, marginTop: 2 }}>
               {value}
+            </Text>
+          ) : (
+            <Text
+              style={{
+                fontSize: FONT_SIZE.PARAGRAPH,
+                marginTop: 2,
+                color: secondaryColor,
+              }}
+            >
+              {placeholder}
             </Text>
           )}
         </View>

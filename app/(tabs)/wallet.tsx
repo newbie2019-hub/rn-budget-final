@@ -14,13 +14,16 @@ import { eq, isNotNull } from 'drizzle-orm'
 import Animated, { LinearTransition } from 'react-native-reanimated'
 import Button from '@/components/Button'
 import { useAppStore } from '@/store/appStore'
+import { useWalletStore } from '@/store/walletStore'
 
 const Wallet = () => {
+  const wallets = useWalletStore((state) => state.wallets)
+  const setWallets = useWalletStore((state) => state.setWallets)
+
   const currency = useAppStore((state) => state.currency)
 
   const db = useSQLiteContext()
   const drizzleDb = drizzle(db, { schema })
-  const [wallets, setWallets] = useState<schema.Wallets[]>([])
 
   const fetchWallets = useCallback(() => {
     const getWallets = async () => {
@@ -85,6 +88,8 @@ const Wallet = () => {
                 onUpdate={handleUpdate}
                 onSetActive={() => handleSetActive(item.id)}
                 currency={currency}
+                width={160}
+                showActive
               />
             )}
             horizontal={true}

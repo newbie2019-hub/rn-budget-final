@@ -14,6 +14,8 @@ import { useSQLiteContext } from 'expo-sqlite'
 import { drizzle } from 'drizzle-orm/expo-sqlite'
 import * as schema from '@/db/schema'
 import { count } from 'drizzle-orm'
+import { formatCurrency } from 'react-native-format-currency'
+import { useAppStore } from '@/store/appStore'
 
 const NewTransaction = () => {
   const width = Dimensions.get('window').width
@@ -22,16 +24,22 @@ const NewTransaction = () => {
   const db = useSQLiteContext()
   const drizzleDb = drizzle(db, { schema })
 
-  const textColor = useThemeColor({}, 'text')
-  const color = useThemeColor({}, 'placeholder')
-  const textSecondary = useThemeColor({}, 'textSecondary')
-
   const [theme, setTheme] = useState<keyof typeof Colors.cards>('celadon')
   const [amount, setAmount] = useState('')
   const [walletName, setWalletName] = useState('')
   const [notes, setNotes] = useState('')
 
+  const textColor = useThemeColor({}, 'text')
+  const color = useThemeColor({}, 'placeholder')
+  const textSecondary = useThemeColor({}, 'textSecondary')
   const selectedTheme = useWalletTheme(theme)
+
+  const currency = useAppStore((state) => state.currency)
+
+  const [valWithSymbol, valWithoutSymbol, symbol] = formatCurrency({
+    amount: Number(amount || 0),
+    code: currency,
+  })
 
   const onSubmit = useCallback(async () => {
     try {
@@ -96,21 +104,29 @@ const NewTransaction = () => {
           }}
         >
           <View style={{ marginTop: 40 }}>
-            <TextInput
-              placeholder="0.00"
-              keyboardType="numeric"
+            <View
               style={{
-                width: '100%',
-                marginHorizontal: 'auto',
-                fontSize: FONT_SIZE.AMOUNT,
-                textAlign: 'center',
-                color: textColor,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'flex-end',
               }}
-              value={amount}
-              placeholderTextColor={color}
-              onChangeText={setAmount}
-              autoFocus
-            />
+            >
+              <Text style={{ marginBottom: 10, fontSize: FONT_SIZE.LG }}>
+                {symbol}
+              </Text>
+              <TextInput
+                placeholder="0.00"
+                keyboardType="numeric"
+                style={{
+                  fontSize: FONT_SIZE.AMOUNT,
+                  color: textColor,
+                }}
+                value={amount}
+                placeholderTextColor={color}
+                onChangeText={setAmount}
+                autoFocus
+              />
+            </View>
             <Text
               style={{
                 fontSize: FONT_SIZE.PARAGRAPH,

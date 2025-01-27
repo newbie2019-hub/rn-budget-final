@@ -5,7 +5,7 @@ import { Wallets } from '@/db/schema'
 import { useWalletTheme } from '@/hooks/useThemeColor'
 import { Feather } from '@expo/vector-icons'
 import React from 'react'
-import { StyleSheet } from 'react-native'
+import { DimensionValue, StyleSheet, TouchableOpacity } from 'react-native'
 import { formatCurrency } from 'react-native-format-currency'
 import { WalletContext } from './WalletContext'
 
@@ -14,9 +14,12 @@ interface CardWalletProps {
   isActive?: boolean
   wallet: Wallets
   currency: string
-  onDelete: () => void
-  onUpdate: () => void
-  onSetActive: () => void
+  width?: DimensionValue
+  showActive?: boolean
+  activeId?: number | null
+  onDelete?: () => void
+  onUpdate?: () => void
+  onSetActive?: () => void
 }
 
 const CardWallet = ({
@@ -26,6 +29,9 @@ const CardWallet = ({
   onUpdate,
   onSetActive,
   currency = 'USD',
+  width = '100%',
+  showActive = false,
+  activeId, // If component is reused and want to set a different active wallet
 }: CardWalletProps) => {
   const date = new Date(wallet.created_at!)
   const formattedDate = new Intl.DateTimeFormat('en-US', {
@@ -40,12 +46,10 @@ const CardWallet = ({
     code: currency,
   })
 
-  return (
-    <WalletContext
-      isActive={!!wallet.active_at}
-      onSetActive={onSetActive}
-      onDelete={onDelete}
-      onUpdate={onUpdate}
+  const content = (
+    <TouchableOpacity
+      activeOpacity={0.65}
+      onPress={onSetActive}
     >
       <View
         style={[
@@ -54,7 +58,9 @@ const CardWallet = ({
             backgroundColor: themeData.background,
             justifyContent: 'space-between',
           },
-          wallet.active_at ? styles.active : null,
+          { width: width },
+          showActive && (wallet.active_at ? styles.active : null),
+          activeId === wallet.id ? styles.active : null,
         ]}
       >
         <View
@@ -105,8 +111,23 @@ const CardWallet = ({
           {wallet.wallet}
         </Text>
       </View>
-    </WalletContext>
+    </TouchableOpacity>
   )
+
+  if (onDelete && onUpdate && onSetActive) {
+    return (
+      <WalletContext
+        isActive={!!wallet.active_at}
+        onSetActive={onSetActive}
+        onDelete={onDelete}
+        onUpdate={onUpdate}
+      >
+        {content}
+      </WalletContext>
+    )
+  } else {
+    return content
+  }
 }
 
 export default CardWallet
@@ -114,7 +135,6 @@ export default CardWallet
 const styles = StyleSheet.create({
   card: {
     padding: 16,
-    width: 160,
     borderRadius: 10,
     height: 200,
   },

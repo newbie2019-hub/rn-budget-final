@@ -7,5 +7,9 @@ declare global {
     amount: number
     createdAt: string | Date
   }
+  type Options = {
+    label: string
+    value: TransactionType
+  }[]
   type TransactionType = 'expense' | 'income' | 'transfer'
 }

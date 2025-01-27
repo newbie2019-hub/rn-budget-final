@@ -32,7 +32,7 @@ const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
           <BottomSheetModal
             ref={bottomSheetModalRef}
             enablePanDownToClose
-            enableDynamicSizing
+            enableDynamicSizing={false}
             index={1}
             snapPoints={snapPoints}
             detached={detached}
@@ -40,11 +40,7 @@ const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
             handleStyle={{ backgroundColor: bgColor }}
             backdropComponent={BottomSheetBackdrop}
           >
-            <BottomSheetView
-              style={[styles.contentContainer, { backgroundColor: bgColor }]}
-            >
-              {children}
-            </BottomSheetView>
+            {children}
           </BottomSheetModal>
         </BottomSheetModalProvider>
       </GestureHandlerRootView>

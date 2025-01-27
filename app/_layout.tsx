@@ -12,7 +12,7 @@ import { useDrizzleStudio } from 'expo-drizzle-studio-plugin'
 import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator'
 import migrations from '@/drizzle/migrations'
 import { drizzle } from 'drizzle-orm/expo-sqlite'
-import { addDummyData } from '@/db/addDummyData'
+import { addCategoryData } from '@/db/addDummyData'
 import { StatusBar } from 'expo-status-bar'
 
 const DB_NAME = 'budget_app'
@@ -28,7 +28,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (success) {
-      addDummyData(db)
+      addCategoryData(db)
     }
   }, [success])
 

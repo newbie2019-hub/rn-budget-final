@@ -5,19 +5,22 @@ import { FONT_SIZE } from '@/constants/styling'
 import { formatCurrency } from 'react-native-format-currency'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import { Transactions } from '@/db/schema'
+import { TransactionsWithCategory } from '@/db/schema'
+import { useAppStore } from '@/store/appStore'
+import { formatDate } from '@/lib/helpers'
 
 const ListTransaction = ({
   transaction,
   handleOnPress,
 }: {
-  transaction: Transactions
+  transaction: TransactionsWithCategory
   handleOnPress: () => void
 }) => {
   const color = useThemeColor({}, 'text')
+  const currency = useAppStore((state) => state.currency)
 
   const [valueFormattedWithSymbol, valueFormattedWithoutSymbol, symbol] =
-    formatCurrency({ amount: +transaction.amount, code: 'USD' })
+    formatCurrency({ amount: +transaction.amount, code: currency })
 
   return (
     <TouchableOpacity onPress={handleOnPress}>
@@ -44,15 +47,15 @@ const ListTransaction = ({
             type="secondaryBackground"
           >
             <Text style={{ fontSize: FONT_SIZE.PARAGRAPH }}>
-              {transaction.category_id}
+              {transaction.category.category}
             </Text>
             <Text style={{ color: 'gray', fontSize: FONT_SIZE.CHIP }}>
-              {transaction.created_at?.toString()}
+              {formatDate(transaction?.created_at)}
             </Text>
           </View>
         </View>
         <View
-          style={{ gap: 3 }}
+          style={{ flex: 1, gap: 3 }}
           type="secondaryBackground"
         >
           <Text
@@ -69,6 +72,7 @@ const ListTransaction = ({
               color: 'gray',
               fontSize: FONT_SIZE.CHIP,
               textAlign: 'right',
+              textTransform: 'capitalize',
             }}
           >
             {transaction.type}

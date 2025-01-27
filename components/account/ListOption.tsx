@@ -11,7 +11,7 @@ const ListOption = ({
   label: string
   onClick: () => void
   value: string
-  renderItem: () => void
+  renderItem?: () => void
 }) => {
   const secondaryBg = useThemeColor({}, 'secondaryBackground')
 

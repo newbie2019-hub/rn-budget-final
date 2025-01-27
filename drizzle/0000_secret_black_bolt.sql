@@ -1,6 +1,7 @@
 CREATE TABLE `categories` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`category` text NOT NULL,
+	`type` text NOT NULL,
 	`created_at` integer,
 	`deleted_at` integer,
 	`updated_at` integer
@@ -25,7 +26,7 @@ CREATE TABLE `wallets` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`wallet` text NOT NULL,
 	`theme` text NOT NULL,
-	`notes` text NOT NULL,
+	`notes` text,
 	`active_at` integer,
 	`amount` integer NOT NULL,
 	`created_at` integer,
