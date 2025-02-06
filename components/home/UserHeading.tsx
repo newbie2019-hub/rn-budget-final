@@ -14,6 +14,7 @@ const UserHeading = () => {
       style={{
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
         marginVertical: 10,
       }}
     >
@@ -21,10 +22,10 @@ const UserHeading = () => {
         <Text style={{ fontSize: FONT_SIZE.HEADING }}>Hi, John</Text>
         <Text style={{ fontSize: FONT_SIZE.PARAGRAPH }}>Good Morning!</Text>
       </View>
-      <View style={{ flexDirection: 'row', gap: 12 }}>
+      <View style={{ flexDirection: 'row', gap: 14 }}>
         <TouchableOpacity>
           <Feather
-            name="settings"
+            name="sun"
             size={ICON_SIZE}
             color={color}
           />

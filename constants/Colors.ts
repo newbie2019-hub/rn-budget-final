@@ -6,6 +6,9 @@ export const CUSTOM_BG = '#eef3f7'
 export const SUBTLE_DARK = '#1f1f1f'
 export const PRIMARY = '#2658e0'
 
+export const EXPENSE_COLOR = '#d32f2f';
+export const INCOME_COLOR = '#388e3c';
+
 export const Colors = {
   light: {
     text: '#11181C',
@@ -31,7 +34,7 @@ export const Colors = {
     gray: '#424242',
     background: '#151718',
     navBorder: '#38383838',
-    secondaryBackground: '#242424',
+    secondaryBackground: '#1f1f1f',
     borderColor: '#242424',
     chipColor: '#404040',
     tint: tintColorDark,

@@ -14,3 +14,8 @@ export type TransactionAction =
   | { type: 'setNotes'; payload: string }
   | { type: 'setType'; payload: TransactionType }
   | { type: 'setDate'; payload: Date };
+
+export interface TransactionContext {
+  deleteTransaction: (id: number) => Promise<void>
+  transactionSummary: { income: number, expense: number }
+}

@@ -7,65 +7,65 @@ import { Platform, ScrollView } from 'react-native'
 import SelectableList from '@/components/SelectableList'
 import LottieView from 'lottie-react-native'
 import { useEffect, useRef, useState } from 'react'
-import * as Notifications from 'expo-notifications'
-import {
-  schedulePushNotification,
-  registerForPushNotificationsAsync,
-} from '@/lib/push-notification'
+// import * as Notifications from 'expo-notifications'
+// import {
+//   schedulePushNotification,
+//   registerForPushNotificationsAsync,
+// } from '@/lib/push-notification'
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-})
+// Notifications.setNotificationHandler({
+//   handleNotification: async () => ({
+//     shouldShowAlert: true,
+//     shouldPlaySound: false,
+//     shouldSetBadge: false,
+//   }),
+// })
 
 const Reminders = () => {
   const textSecondary = useThemeColor({}, 'textSecondary')
 
   const [notificationType, setNotificationType] = useState('')
 
-  // Notification
-  const [expoPushToken, setExpoPushToken] = useState('')
-  const [channels, setChannels] = useState<Notifications.NotificationChannel[]>(
-    [],
-  )
-  const [notification, setNotification] = useState<
-    Notifications.Notification | undefined
-  >(undefined)
-  const notificationListener = useRef<Notifications.EventSubscription>()
-  const responseListener = useRef<Notifications.EventSubscription>()
+  // // Notification
+  // const [expoPushToken, setExpoPushToken] = useState('')
+  // const [channels, setChannels] = useState<Notifications.NotificationChannel[]>(
+  //   [],
+  // )
+  // const [notification, setNotification] = useState<
+  //   Notifications.Notification | undefined
+  // >(undefined)
+  // const notificationListener = useRef<Notifications.EventSubscription>()
+  // const responseListener = useRef<Notifications.EventSubscription>()
 
-  useEffect(() => {
-    registerForPushNotificationsAsync().then(
-      (token) => token && setExpoPushToken(token),
-    )
+  // useEffect(() => {
+  //   registerForPushNotificationsAsync().then(
+  //     (token) => token && setExpoPushToken(token),
+  //   )
 
-    if (Platform.OS === 'android') {
-      Notifications.getNotificationChannelsAsync().then((value) =>
-        setChannels(value ?? []),
-      )
-    }
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
-        setNotification(notification)
-      })
+  //   if (Platform.OS === 'android') {
+  //     Notifications.getNotificationChannelsAsync().then((value) =>
+  //       setChannels(value ?? []),
+  //     )
+  //   }
+  //   notificationListener.current =
+  //     Notifications.addNotificationReceivedListener((notification) => {
+  //       setNotification(notification)
+  //     })
 
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response)
-      })
+  //   responseListener.current =
+  //     Notifications.addNotificationResponseReceivedListener((response) => {
+  //       console.log(response)
+  //     })
 
-    return () => {
-      notificationListener.current &&
-        Notifications.removeNotificationSubscription(
-          notificationListener.current,
-        )
-      responseListener.current &&
-        Notifications.removeNotificationSubscription(responseListener.current)
-    }
-  }, [])
+  //   return () => {
+  //     notificationListener.current &&
+  //       Notifications.removeNotificationSubscription(
+  //         notificationListener.current,
+  //       )
+  //     responseListener.current &&
+  //       Notifications.removeNotificationSubscription(responseListener.current)
+  //   }
+  // }, [])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -112,7 +112,7 @@ const Reminders = () => {
               description="Turn off all reminders"
               onPress={async () => {
                 setNotificationType('no-notification')
-                await schedulePushNotification()
+                // await schedulePushNotification()
               }}
               isSelected={notificationType === 'no-notification'}
               renderItem={

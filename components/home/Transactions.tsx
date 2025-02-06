@@ -2,20 +2,14 @@ import { FONT_SIZE } from '@/constants/styling'
 import { View, Text } from '@/components/themed'
 import FormInput from '../form/FormInput'
 import { EvilIcons } from '@expo/vector-icons'
-import { useState } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import Animated, { LinearTransition } from 'react-native-reanimated'
 import ListTransaction from '../ListTransaction'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { TransactionsWithCategory } from '@/db/schema'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 const BORDER_RADIUS = 14
-
-const renderItem = (transaction: TransactionsWithCategory) => (
-  <ListTransaction
-    transaction={transaction}
-    handleOnPress={() => alert('Hello World')}
-  />
-)
 
 const Transactions = ({
   transactions,
@@ -28,6 +22,21 @@ const Transactions = ({
   const bgColor = useThemeColor({}, 'background')
   const shadowColor = useThemeColor({}, 'shadowColor')
   const textSecondary = useThemeColor({}, 'textSecondary')
+
+  const filteredTransactions = useMemo(() => {
+    // Allow search for category or amount
+    return transactions.filter((transaction) => {
+      return (
+        transaction.category?.category
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+        transaction.amount
+          .toString()
+          .toLowerCase()
+          .includes(search.toLowerCase())
+      )
+    })
+  }, [transactions, search])
 
   return (
     <View
@@ -49,7 +58,7 @@ const Transactions = ({
       <View
         style={{
           paddingTop: 24,
-          paddingHorizontal: 24,
+          paddingHorizontal: 30,
           flex: 1,
           borderTopLeftRadius: BORDER_RADIUS,
           borderTopRightRadius: BORDER_RADIUS,
@@ -84,7 +93,7 @@ const Transactions = ({
           </View>
         ) : (
           <View
-            style={{ flex: 0.7 }}
+            style={{ flex: 0.95 }}
             type="secondaryBackground"
           >
             <FormInput
@@ -102,17 +111,25 @@ const Transactions = ({
               }
             />
             <View
-              style={{ marginTop: 10, flex: 1, paddingBottom: 20 }}
+              style={{
+                marginTop: 10,
+                flex: 1,
+                height: '100%',
+              }}
               type="secondaryBackground"
             >
-              <Animated.FlatList
-                data={transactions}
-                renderItem={({ item }) => renderItem(item)}
-                itemLayoutAnimation={LinearTransition}
-                fadingEdgeLength={40}
-                showsVerticalScrollIndicator={false}
-                keyboardDismissMode={'on-drag'}
-              />
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <Animated.FlatList
+                  data={filteredTransactions}
+                  renderItem={({ item }) => (
+                    <ListTransaction transaction={item} />
+                  )}
+                  itemLayoutAnimation={LinearTransition}
+                  fadingEdgeLength={20}
+                  showsVerticalScrollIndicator={false}
+                  keyboardDismissMode={'on-drag'}
+                />
+              </GestureHandlerRootView>
             </View>
           </View>
         )}

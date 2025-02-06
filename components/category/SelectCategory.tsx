@@ -6,6 +6,34 @@ import FormInput from '../form/FormInput'
 import { EvilIcons, Feather } from '@expo/vector-icons'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import { getIcon } from '@/lib/helpers/getIcon'
+
+const getIconComponent = ({
+  icon,
+  iconType,
+  size,
+  color,
+}: {
+  icon: string
+  iconType: string
+  size: number
+  color: string
+}) => {
+  const iconComponent = getIcon({ icon, iconType, size, color })
+
+  return (
+    <View
+      style={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 18,
+        height: 18,
+      }}
+    >
+      {iconComponent}
+    </View>
+  )
+}
 
 const SelectCategory = ({
   selectedCategory,
@@ -37,7 +65,7 @@ const SelectCategory = ({
       >
         Select Category
       </Text>
-      <View style={{ marginBottom: 20 }}>
+      <View style={{ marginBottom: 5 }}>
         <FormInput
           placeholder="Search Category"
           value={search}
@@ -52,7 +80,10 @@ const SelectCategory = ({
           }
         />
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ gap: 5 }}
+      >
         {filteredCategories.map((categ) => (
           <TouchableOpacity
             key={categ.id}
@@ -66,13 +97,30 @@ const SelectCategory = ({
                 alignItems: 'center',
               }}
             >
-              <Text
-                style={[
-                  categ.id === selectedCategory ? { fontWeight: '500' } : {},
-                ]}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 14,
+                  flex: 1,
+                  paddingLeft: 4,
+                }}
               >
-                {categ.category}
-              </Text>
+                {getIconComponent({
+                  icon: categ.icon!,
+                  iconType: categ.iconType!,
+                  size: 20,
+                  color: color,
+                })}
+                <Text
+                  style={[
+                    { fontSize: FONT_SIZE.BASE },
+                    categ.id === selectedCategory ? { fontWeight: '500' } : {},
+                  ]}
+                >
+                  {categ.category}
+                </Text>
+              </View>
               {categ.id === selectedCategory && (
                 <Feather
                   name="check"

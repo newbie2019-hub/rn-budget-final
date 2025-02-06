@@ -2,6 +2,8 @@ CREATE TABLE `categories` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`category` text NOT NULL,
 	`type` text NOT NULL,
+	`icon` text,
+	`iconType` text,
 	`created_at` integer,
 	`deleted_at` integer,
 	`updated_at` integer

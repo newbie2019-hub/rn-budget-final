@@ -15,7 +15,11 @@ import { drizzle } from 'drizzle-orm/expo-sqlite'
 import { addCategoryData } from '@/db/addDummyData'
 import { StatusBar } from 'expo-status-bar'
 
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+
 const DB_NAME = 'budget_app'
+
+const queryClient = new QueryClient()
 
 export default function RootLayout() {
   const expo = SQLite.openDatabaseSync(DB_NAME)
@@ -50,99 +54,101 @@ export default function RootLayout() {
 
   return (
     <Suspense fallback={<ActivityIndicator size="large" />}>
-      <SQLite.SQLiteProvider
-        databaseName={DB_NAME}
-        options={{ enableChangeListener: true }}
-        useSuspense
-      >
-        <StatusBar style="auto" />
-        <Stack
-          screenOptions={{
-            contentStyle: { backgroundColor: background },
-          }}
+      <QueryClientProvider client={queryClient}>
+        <SQLite.SQLiteProvider
+          databaseName={DB_NAME}
+          options={{ enableChangeListener: true }}
+          useSuspense
         >
-          <Stack.Screen
-            name="(tabs)"
-            options={{
-              headerShown: false,
+          <StatusBar style="auto" />
+          <Stack
+            screenOptions={{
+              contentStyle: { backgroundColor: background },
             }}
-          />
-          <Stack.Screen
-            name="index"
-            options={{ title: 'Home' }}
-          />
-          <Stack.Screen
-            name="(modals)/new-transaction"
-            options={{
-              title: 'New Transaction',
-              headerShown: false,
-              presentation: 'modal',
-            }}
-          />
-          <Stack.Screen
-            name="(modals)/change-wallet"
-            options={{
-              title: 'Select Wallet',
-              presentation: 'modal',
-            }}
-          />
-          <Stack.Screen
-            name="(modals)/category"
-            options={{
-              title: 'Categories',
-              presentation: 'modal',
-            }}
-          />
-          <Stack.Screen
-            name="(modals)/add-wallet"
-            options={{
-              title: 'Add Account',
-              presentation: 'modal',
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="(modals)/reminders"
-            options={{
-              title: 'Reminders',
-              presentation: 'modal',
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="(modals)/about"
-            options={{
-              title: 'About Kaperas',
-              presentation: 'modal',
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="(modals)/support/feedback"
-            options={{
-              title: 'Feedback',
-              presentation: 'modal',
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="(modals)/support/feature-request"
-            options={{
-              title: 'Feature Request',
-              presentation: 'modal',
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="(modals)/account/currency-selection"
-            options={{
-              title: 'Select Currency',
-              presentation: 'modal',
-              headerShown: false,
-            }}
-          />
-        </Stack>
-      </SQLite.SQLiteProvider>
+          >
+            <Stack.Screen
+              name="(tabs)"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="index"
+              options={{ title: 'Home' }}
+            />
+            <Stack.Screen
+              name="(modals)/new-transaction"
+              options={{
+                title: 'New Transaction',
+                headerShown: false,
+                presentation: 'modal',
+              }}
+            />
+            <Stack.Screen
+              name="(modals)/change-wallet"
+              options={{
+                title: 'Select Wallet',
+                presentation: 'modal',
+              }}
+            />
+            <Stack.Screen
+              name="(modals)/category"
+              options={{
+                title: 'Categories',
+                presentation: 'modal',
+              }}
+            />
+            <Stack.Screen
+              name="(modals)/add-wallet"
+              options={{
+                title: 'Add Account',
+                presentation: 'modal',
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="(modals)/reminders"
+              options={{
+                title: 'Reminders',
+                presentation: 'modal',
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="(modals)/about"
+              options={{
+                title: 'About Kaperas',
+                presentation: 'modal',
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="(modals)/support/feedback"
+              options={{
+                title: 'Feedback',
+                presentation: 'modal',
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="(modals)/support/feature-request"
+              options={{
+                title: 'Feature Request',
+                presentation: 'modal',
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="(modals)/account/currency-selection"
+              options={{
+                title: 'Select Currency',
+                presentation: 'modal',
+                headerShown: false,
+              }}
+            />
+          </Stack>
+        </SQLite.SQLiteProvider>
+      </QueryClientProvider>
     </Suspense>
   )
 }

@@ -8,9 +8,11 @@ const storage = new MMKV();
 // Create a Zustand store with persistence
 type AppState = {
   currency: string;
+  maskedValue: boolean;
   theme: 'light' | 'dark';
   setCurrency: (currency: string) => void;
   setTheme: (theme: 'light' | 'dark') => void;
+  setMaskedValue: (maskedValue: boolean) => void;
 };
 
 export const useAppStore = create<AppState>()(
@@ -18,8 +20,10 @@ export const useAppStore = create<AppState>()(
     (set) => ({
       currency: 'USD', // Default currency
       theme: 'light',  // Default theme
+      maskedValue: false,
       setCurrency: (currency) => set({ currency }),
       setTheme: (theme) => set({ theme }),
+      setMaskedValue: (maskedValue) => set({ maskedValue }),
     }),
     {
       name: 'app-store', // Storage key

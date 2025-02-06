@@ -10,6 +10,7 @@ export const FONT_SIZE = {
   LG: 30,
   HEADING: 24,
   TITLE: 20,
+  BASE: 18,
   PARAGRAPH: 16,
   DESCRIPTION: 14,
   CHIP: 13
@@ -17,6 +18,7 @@ export const FONT_SIZE = {
 
 export const defaultStyles = StyleSheet.create({
   container: {
-    padding: 24,
+    paddingHorizontal: 30,
+    paddingVertical: 20
   }
 })

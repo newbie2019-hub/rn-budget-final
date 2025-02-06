@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 
 import Entypo from '@expo/vector-icons/Entypo'
 import { FONT_SIZE } from '@/constants/styling'
@@ -8,8 +7,10 @@ import * as schema from '@/db/schema'
 
 import { useThemeColor } from '@/hooks/useThemeColor'
 
-import Menu from './Menu'
 import { formatCurrency } from 'react-native-format-currency'
+import { useAppStore } from '@/store/appStore'
+import { EXPENSE_COLOR, INCOME_COLOR } from '@/constants/Colors'
+import { useHomeContext } from '@/context/useHomeContext'
 
 const Wallet = ({
   wallet,
@@ -18,18 +19,32 @@ const Wallet = ({
   wallet: schema.Wallets | null
   currency: string
 }) => {
+  const { transactionSummary } = useHomeContext()
+
   const color = useThemeColor({}, 'text')
   const textSecondary = useThemeColor({}, 'textSecondary')
+  const borderColor = useThemeColor({}, 'borderColor')
 
-  const [isShown, setIsShown] = useState(true)
+  const maskedValue = useAppStore((state) => state.maskedValue)
+  const setMaskedValue = useAppStore((state) => state.setMaskedValue)
 
   const [valWithSymbol, valWithoutSymbol, symbol] = formatCurrency({
     amount: Number(wallet?.amount || 0),
     code: currency,
   })
 
+  const [income] = formatCurrency({
+    amount: Number(transactionSummary.income),
+    code: currency,
+  })
+
+  const [expense] = formatCurrency({
+    amount: Number(transactionSummary.expense),
+    code: currency,
+  })
+
   return (
-    <View style={{ marginVertical: 20 }}>
+    <View style={{ marginTop: 20, marginBottom: 14 }}>
       <Text style={{ fontSize: FONT_SIZE.PARAGRAPH, color: textSecondary }}>
         Wallet Balance
       </Text>
@@ -37,20 +52,58 @@ const Wallet = ({
         <View style={{ flexDirection: 'row' }}>
           <Text style={{ fontSize: FONT_SIZE.AMOUNT }}>{symbol}</Text>
           <Text style={{ fontSize: FONT_SIZE.AMOUNT }}>
-            {isShown ? valWithoutSymbol : '****'}
+            {maskedValue ? valWithoutSymbol : '****'}
           </Text>
         </View>
-        <TouchableOpacity onPress={() => setIsShown((isShown) => !isShown)}>
+        <TouchableOpacity onPress={() => setMaskedValue(!maskedValue)}>
           <Entypo
-            name={isShown ? 'eye' : 'eye-with-line'}
+            name={maskedValue ? 'eye' : 'eye-with-line'}
             size={24}
             color={color}
           />
         </TouchableOpacity>
       </View>
-      <Menu />
+      <View style={[styles.dashedBorder, { borderColor: borderColor }]}></View>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          paddingHorizontal: 4,
+          paddingVertical: 10,
+        }}
+      >
+        <View style={{ flex: 1 }}>
+          <Text
+            style={{ fontSize: FONT_SIZE.DESCRIPTION, color: textSecondary }}
+          >
+            Expense
+          </Text>
+          <Text style={{ fontSize: FONT_SIZE.TITLE, color: EXPENSE_COLOR }}>
+            - {expense}
+          </Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text
+            style={{ fontSize: FONT_SIZE.DESCRIPTION, color: textSecondary }}
+          >
+            Income
+          </Text>
+          <Text style={{ fontSize: FONT_SIZE.TITLE, color: INCOME_COLOR }}>
+            + {income}
+          </Text>
+        </View>
+      </View>
     </View>
   )
 }
 
 export default Wallet
+
+const styles = StyleSheet.create({
+  dashedBorder: {
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    marginTop: 8,
+    marginBottom: 4,
+  },
+})

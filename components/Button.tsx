@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React from 'react'
 import { FONT_SIZE } from '@/constants/styling'
 
@@ -7,6 +7,8 @@ interface ButtonProps {
   textColor?: string
   color?: string
   onPress: () => void
+  disabled?: boolean
+  isLoading?: boolean
 }
 
 const Button = ({
@@ -14,6 +16,8 @@ const Button = ({
   color = '#466ee3',
   textColor = 'white',
   onPress,
+  isLoading,
+  disabled,
 }: ButtonProps) => {
   return (
     <TouchableOpacity
@@ -26,12 +30,21 @@ const Button = ({
           backgroundColor: color,
           justifyContent: 'center',
           alignItems: 'center',
+          flexDirection: 'row',
+          gap: 6,
           borderRadius: 24,
         }}
       >
-        <Text style={{ fontSize: FONT_SIZE.PARAGRAPH, color: textColor }}>
-          {label}
-        </Text>
+        {isLoading ? (
+          <ActivityIndicator
+            size="small"
+            color={textColor}
+          />
+        ) : (
+          <Text style={{ fontSize: FONT_SIZE.PARAGRAPH, color: textColor }}>
+            {label}
+          </Text>
+        )}
       </View>
     </TouchableOpacity>
   )

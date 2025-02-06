@@ -56,6 +56,13 @@ const Account = () => {
                 }
               />
               <ListOption
+                label="Categories"
+                value={currency}
+                onClick={() =>
+                  router.push('/(modals)/account/currency-selection')
+                }
+              />
+              <ListOption
                 label="Reminder Notification"
                 value=""
                 onClick={() => router.push('/(modals)/reminders')}

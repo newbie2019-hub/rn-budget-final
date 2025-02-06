@@ -5,7 +5,7 @@ import { useThemeColor } from '@/hooks/useThemeColor'
 import { useAppStore } from '@/store/appStore'
 import { EvilIcons, Feather } from '@expo/vector-icons'
 import { useMemo, useState } from 'react'
-import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import {
   formatCurrency,
   getSupportedCurrencies,

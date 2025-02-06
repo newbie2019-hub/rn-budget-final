@@ -12,3 +12,4 @@ export const formatDate = (timestamp: Date | null) => {
     hour12: true, // Enable 12-hour format
   });
 };
+
