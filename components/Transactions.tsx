@@ -1,27 +1,22 @@
 import { FONT_SIZE } from "@/constants/styling";
 import { View, Text } from "@/components/themed";
-import FormInput from "../form/FormInput";
+import FormInput from "./form/FormInput";
 import { EvilIcons } from "@expo/vector-icons";
 import { useMemo, useState } from "react";
 import Animated, { LinearTransition } from "react-native-reanimated";
-import ListTransaction from "../ListTransaction";
+import ListTransaction from "./ListTransaction";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { TransactionsWithCategory } from "@/db/schema";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useTransactions } from "@/hooks/useTransactions";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-const BORDER_RADIUS = 14;
 
 const Transactions = ({
   transactions,
+  title,
 }: {
-  transactions: TransactionsWithCategory[] | undefined;
+  transactions: TransactionsWithCategory[];
+  title: string;
 }) => {
-  const queryClient = useQueryClient();
-
   const [search, setSearch] = useState("");
-  const { deleteTransaction } = useTransactions();
 
   const color = useThemeColor({}, "text");
   const bgColor = useThemeColor({}, "background");
@@ -32,10 +27,10 @@ const Transactions = ({
     // Allow search for category or amount
     return transactions?.filter((transaction) => {
       return (
-        transaction?.category?.category
+        transaction.category?.category
           .toLowerCase()
           .includes(search.toLowerCase()) ||
-        transaction?.amount
+        transaction.amount
           .toString()
           .toLowerCase()
           .includes(search.toLowerCase())
@@ -43,40 +38,13 @@ const Transactions = ({
     });
   }, [transactions, search]);
 
-  const { mutateAsync: removeTransaction } = useMutation({
-    mutationFn: deleteTransaction,
-    mutationKey: ["delete-transaction"],
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["wallet"] });
-    },
-  });
-
   return (
-    <View
-      style={{
-        flex: 1,
-        borderTopLeftRadius: BORDER_RADIUS,
-        borderTopRightRadius: BORDER_RADIUS,
-        shadowColor: shadowColor,
-        shadowOffset: {
-          width: 0,
-          height: 1,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 2.22,
-        elevation: 3,
-      }}
-      type="secondaryBackground"
-    >
+    <View style={{ flex: 1 }} type="secondaryBackground">
       <View
         style={{
           paddingTop: 24,
-          paddingHorizontal: 30,
           flex: 1,
-          borderTopLeftRadius: BORDER_RADIUS,
-          borderTopRightRadius: BORDER_RADIUS,
         }}
-        type="secondaryBackground"
       >
         <View
           style={{
@@ -85,14 +53,11 @@ const Transactions = ({
             marginBottom: 12,
             alignItems: "center",
           }}
-          type="secondaryBackground"
         >
-          <Text style={{ fontSize: FONT_SIZE.PARAGRAPH }}>
-            Recent Transactions
-          </Text>
+          <Text style={{ fontSize: FONT_SIZE.PARAGRAPH }}>Hello</Text>
           <Text style={{ fontSize: FONT_SIZE.CHIP }}>View All</Text>
         </View>
-
+        <Text>Transactions: {JSON.stringify(transactions)}</Text>
         {transactions?.length === 0 ? (
           <View
             style={{
@@ -126,10 +91,7 @@ const Transactions = ({
                 <Animated.FlatList
                   data={filteredTransactions}
                   renderItem={({ item }) => (
-                    <ListTransaction
-                      transaction={item}
-                      onDelete={removeTransaction}
-                    />
+                    <ListTransaction transaction={item} />
                   )}
                   itemLayoutAnimation={LinearTransition}
                   fadingEdgeLength={20}

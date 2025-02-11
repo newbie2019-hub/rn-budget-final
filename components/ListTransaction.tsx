@@ -1,23 +1,21 @@
-import { StyleSheet, TouchableOpacity } from 'react-native'
-import { View, Text } from './themed'
-import React from 'react'
-import { FONT_SIZE } from '@/constants/styling'
-import { formatCurrency } from 'react-native-format-currency'
-import Ionicons from '@expo/vector-icons/Ionicons'
-import { useThemeColor } from '@/hooks/useThemeColor'
-import { TransactionsWithCategory } from '@/db/schema'
-import { useAppStore } from '@/store/appStore'
-import { formatDate } from '@/lib/helpers'
-import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable'
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text } from "./themed";
+import React from "react";
+import { FONT_SIZE } from "@/constants/styling";
+import { formatCurrency } from "react-native-format-currency";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { TransactionsWithCategory } from "@/db/schema";
+import { useAppStore } from "@/store/appStore";
+import { formatDate } from "@/lib/helpers";
+import ReanimatedSwipeable from "react-native-gesture-handler/ReanimatedSwipeable";
 import Reanimated, {
   SharedValue,
   useAnimatedStyle,
-} from 'react-native-reanimated'
-import { useHomeContext } from '@/context/useHomeContext'
-import { getIcon } from '@/lib/helpers/getIcon'
-import { EXPENSE_COLOR, INCOME_COLOR } from '@/constants/Colors'
+} from "react-native-reanimated";
+import { getIcon } from "@/lib/helpers/getIcon";
+import { EXPENSE_COLOR, INCOME_COLOR } from "@/constants/Colors";
 
-const OPTION_WIDTH = 80
+const OPTION_WIDTH = 80;
 
 const RightAction = (
   prog: SharedValue<number>,
@@ -28,8 +26,8 @@ const RightAction = (
   const styleAnimation = useAnimatedStyle(() => {
     return {
       transform: [{ translateX: drag.value + OPTION_WIDTH + 12 }],
-    }
-  })
+    };
+  });
 
   return (
     <Reanimated.View style={[styleAnimation, { paddingLeft: 20 }]}>
@@ -37,11 +35,11 @@ const RightAction = (
         style={[
           styles.rightAction,
           {
-            backgroundColor: '#d32f2f',
-            height: '100%',
+            backgroundColor: "#d32f2f",
+            height: "100%",
             width: OPTION_WIDTH - 5,
-            alignItems: 'center',
-            justifyContent: 'center',
+            alignItems: "center",
+            justifyContent: "center",
           },
         ]}
         onPress={() => onDelete(transactionId)}
@@ -50,24 +48,25 @@ const RightAction = (
         <Text>Delete</Text>
       </TouchableOpacity>
     </Reanimated.View>
-  )
-}
+  );
+};
 
 const ListTransaction = ({
   transaction,
+  onDelete,
 }: {
-  transaction: TransactionsWithCategory
+  transaction: TransactionsWithCategory;
+  onDelete: (id: number) => Promise<void>;
 }) => {
-  const { deleteTransaction } = useHomeContext()
-  const { category } = transaction
+  const { category } = transaction;
 
-  const color = useThemeColor({}, 'text')
-  const currency = useAppStore((state) => state.currency)
+  const color = useThemeColor({}, "text");
+  const currency = useAppStore((state) => state.currency);
 
   const [valueFormattedWithSymbol] = formatCurrency({
     amount: +transaction.amount,
     code: currency,
-  })
+  });
 
   return (
     <ReanimatedSwipeable
@@ -75,23 +74,21 @@ const ListTransaction = ({
       enableTrackpadTwoFingerGesture
       rightThreshold={50}
       renderRightActions={(progress, dragValue) =>
-        RightAction(progress, dragValue, transaction.id, () =>
-          deleteTransaction(transaction.id),
-        )
+        RightAction(progress, dragValue, transaction.id, onDelete)
       }
     >
       <TouchableOpacity onPress={() => null}>
         <View
           style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
+            flexDirection: "row",
+            justifyContent: "space-between",
             gap: 4,
             marginVertical: 12,
           }}
           type="secondaryBackground"
         >
           <View
-            style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}
+            style={{ flexDirection: "row", gap: 12, alignItems: "center" }}
             type="secondaryBackground"
           >
             {getIcon({
@@ -100,42 +97,36 @@ const ListTransaction = ({
               color,
               size: 22,
             })}
-            <View
-              style={{ gap: 3 }}
-              type="secondaryBackground"
-            >
+            <View style={{ gap: 3 }} type="secondaryBackground">
               <Text style={{ fontSize: FONT_SIZE.PARAGRAPH }}>
                 {transaction.category?.category}
               </Text>
-              <Text style={{ color: 'gray', fontSize: FONT_SIZE.CHIP }}>
+              <Text style={{ color: "gray", fontSize: FONT_SIZE.CHIP }}>
                 {formatDate(transaction?.created_at)}
               </Text>
             </View>
           </View>
-          <View
-            style={{ flex: 1, gap: 3 }}
-            type="secondaryBackground"
-          >
+          <View style={{ flex: 1, gap: 3 }} type="secondaryBackground">
             <Text
               style={[
                 {
-                  textAlign: 'right',
+                  textAlign: "right",
                   fontSize: FONT_SIZE.PARAGRAPH,
                 },
-                transaction.type.toLowerCase() === 'expense'
+                transaction.type.toLowerCase() === "expense"
                   ? { color: EXPENSE_COLOR }
                   : { color: INCOME_COLOR },
               ]}
             >
-              {transaction.type.toLowerCase() === 'expense' ? '-' : '+'}
+              {transaction.type.toLowerCase() === "expense" ? "-" : "+"}
               {valueFormattedWithSymbol}
             </Text>
             <Text
               style={{
-                color: 'gray',
+                color: "gray",
                 fontSize: FONT_SIZE.CHIP,
-                textAlign: 'right',
-                textTransform: 'capitalize',
+                textAlign: "right",
+                textTransform: "capitalize",
               }}
             >
               {transaction.type}
@@ -144,11 +135,11 @@ const ListTransaction = ({
         </View>
       </TouchableOpacity>
     </ReanimatedSwipeable>
-  )
-}
+  );
+};
 
-export default ListTransaction
+export default ListTransaction;
 
 const styles = StyleSheet.create({
   rightAction: {},
-})
+});
