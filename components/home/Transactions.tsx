@@ -90,7 +90,7 @@ const Transactions = ({
           <Text style={{ fontSize: FONT_SIZE.PARAGRAPH }}>
             Recent Transactions
           </Text>
-          <Text style={{ fontSize: FONT_SIZE.CHIP }}>View All</Text>
+          <Text style={{ fontSize: FONT_SIZE.PARAGRAPH }}>View All</Text>
         </View>
 
         {transactions?.length === 0 ? (

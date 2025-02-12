@@ -13,20 +13,48 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTransactions } from "@/hooks/useTransactions";
 import Transactions from "@/components/Transactions";
 import { useWallets } from "@/hooks/useWallets";
+import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity } from "@gorhom/bottom-sheet";
 
 const Wallet = () => {
   const queryClient = useQueryClient();
   const bgColor = useThemeColor({}, "background");
+  const color = useThemeColor({}, "text");
 
   const { getWallets } = useWallets();
-  const { fetchTransactions, handleDelete, handleSetActive, handleUpdate } =
-    useTransactions();
+  const {
+    getActiveWalletTransactions,
+    handleDelete,
+    handleSetActive,
+    handleUpdate,
+    deleteTransaction,
+  } = useTransactions();
 
   const currency = useAppStore((state) => state.currency);
 
   const { data: transactions, isLoading: isTransactionsLoading } = useQuery({
     queryKey: ["all-transactions"],
-    queryFn: fetchTransactions,
+    queryFn: async () => {
+      const data = await getActiveWalletTransactions();
+
+      return Object.values(
+        data.reduce(
+          (acc, transaction) => {
+            const date = new Date(transaction.created_at!)
+              .toISOString()
+              .split("T")[0]; // Extract YYYY-MM-DD
+
+            if (!acc[date]) {
+              acc[date] = { date, data: [] };
+            }
+
+            acc[date].data.push(transaction);
+            return acc;
+          },
+          {} as Record<string, { date: string; data: any[] }>,
+        ),
+      );
+    },
   });
 
   const { data: wallets, isLoading: isWalletsLoading } = useQuery({
@@ -38,6 +66,9 @@ const Wallet = () => {
     mutationFn: handleDelete,
     onSuccess: () => {
       queryClient.invalidateQueries({
+        queryKey: ["wallet"],
+      });
+      queryClient.invalidateQueries({
         queryKey: ["wallets"],
       });
     },
@@ -47,8 +78,23 @@ const Wallet = () => {
     mutationFn: handleSetActive,
     onSuccess: () => {
       queryClient.invalidateQueries({
+        queryKey: ["wallet"],
+      });
+      queryClient.invalidateQueries({
         queryKey: ["wallets"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["all-transactions"],
+      });
+    },
+  });
+
+  const { mutateAsync: removeTransaction } = useMutation({
+    mutationFn: deleteTransaction,
+    mutationKey: ["delete-transaction"],
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["wallet"] });
+      queryClient.invalidateQueries({ queryKey: ["all-transactions"] });
     },
   });
 
@@ -57,33 +103,51 @@ const Wallet = () => {
       <SafeAreaView style={{ flex: 1, backgroundColor: bgColor }}>
         <View style={[defaultStyles.container]}>
           <Text style={{ fontSize: FONT_SIZE.HEADING }}>Wallets</Text>
-          <Animated.FlatList
-            data={wallets}
-            renderItem={({ item }) => (
-              <CardWallet
-                key={item.id}
-                theme={item.theme as keyof typeof Colors.cards}
-                wallet={item}
-                onDelete={() => deleteWallet(item.id)}
-                onUpdate={handleUpdate}
-                onSetActive={() => setActive(item.id)}
-                currency={currency}
-                width={160}
-                showActive
-              />
-            )}
-            horizontal={true}
-            contentContainerStyle={{ gap: 8, marginVertical: 14 }}
-            showsHorizontalScrollIndicator={false}
-            itemLayoutAnimation={LinearTransition}
-          />
-
-          {!isWalletsLoading && wallets?.length > 0 && (
-            <Button
-              label="Add Wallet"
+          <View style={{ flexDirection: "row", gap: 8 }}>
+            <TouchableOpacity
+              activeOpacity={0.7}
               onPress={() => router.push("/(modals)/add-wallet")}
+              style={{ height: "100%" }}
+            >
+              <View
+                style={{
+                  height: 200,
+                  width: 120,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginVertical: 14,
+                  borderRadius: 10,
+                }}
+                type="secondaryBackground"
+              >
+                <Ionicons name="wallet-outline" size={24} color={color} />
+                <Text style={{ marginTop: 4, fontSize: FONT_SIZE.DESCRIPTION }}>
+                  Add Wallet
+                </Text>
+              </View>
+            </TouchableOpacity>{" "}
+            <Animated.FlatList
+              data={wallets}
+              renderItem={({ item }) => (
+                <CardWallet
+                  key={item.id}
+                  theme={item.theme as keyof typeof Colors.cards}
+                  wallet={item}
+                  onDelete={() => deleteWallet(item.id)}
+                  onUpdate={handleUpdate}
+                  onSetActive={() => setActive(item.id)}
+                  currency={currency}
+                  width={160}
+                  showActive
+                />
+              )}
+              horizontal={true}
+              contentContainerStyle={{ gap: 8, marginVertical: 14 }}
+              showsHorizontalScrollIndicator={false}
+              itemLayoutAnimation={LinearTransition}
             />
-          )}
+          </View>
+
           {!isWalletsLoading && wallets?.length === 0 && (
             <View
               style={{
@@ -98,8 +162,12 @@ const Wallet = () => {
               <Text style={{ marginTop: 12 }}>No Wallet Added</Text>
             </View>
           )}
-          <View style={{ flex: 1 }}>
-            <Transactions transactions={transactions} title={"Transactions"} />
+          <View style={{ height: "100%" }}>
+            <Transactions
+              isLoading={isTransactionsLoading}
+              transactions={transactions}
+              removeTransaction={removeTransaction}
+            />
           </View>
         </View>
       </SafeAreaView>

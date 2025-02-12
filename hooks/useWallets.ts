@@ -2,7 +2,8 @@ import { useCallback } from "react";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
 import * as schema from "@/db/schema";
-import { isNotNull } from "drizzle-orm";
+import { desc, isNotNull, sql } from "drizzle-orm";
+import { Transaction } from "@/types";
 
 export function useWallets() {
   const db = useSQLiteContext();
@@ -25,11 +26,35 @@ export function useWallets() {
             with: {
               category: true,
             },
+            orderBy: [desc(schema.transactions.created_at)],
+            limit: 10,
           },
         },
       }),
     [],
   );
 
-  return { getWallets, getActiveWallet };
+  const storeWallet = async (
+    state: Transaction,
+    transaction: Omit<schema.Transactions, "id" | "updated_at" | "deleted_at">,
+  ) => {
+    try {
+      await drizzleDb
+
+        .update(schema.wallet)
+        .set({
+          amount:
+            state.type === "income"
+              ? sql`${schema.wallet.amount} + ${state.amount}`
+              : sql`${schema.wallet.amount} - ${state.amount}`,
+        })
+        .where(isNotNull(schema.wallet.active_at));
+
+      await drizzleDb.insert(schema.transactions).values(transaction);
+    } catch (error) {
+      console.log("Error saving wallet: ", error);
+    }
+  };
+
+  return { getWallets, getActiveWallet, storeWallet };
 }

@@ -1,29 +1,30 @@
-import { Dimensions } from 'react-native'
-import React from 'react'
-import CardWallet from './CardWallet'
-import { FONT_SIZE } from '@/constants/styling'
-import { Colors } from '@/constants/Colors'
-import { useAppStore } from '@/store/appStore'
-import { useWalletStore } from '@/store/walletStore'
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
-import { Text, View } from '../themed'
-import { Link } from 'expo-router'
+import { Dimensions } from "react-native";
+import React from "react";
+import CardWallet from "./CardWallet";
+import { FONT_SIZE } from "@/constants/styling";
+import { Colors } from "@/constants/Colors";
+import { useAppStore } from "@/store/appStore";
+import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { Text, View } from "../themed";
+import { Link } from "expo-router";
+import { Wallets } from "@/db/schema";
 
 const SelectWallet = ({
   onPress,
+  wallets,
   selectedWalletId,
 }: {
-  onPress: (walletId: number, walletName: string) => void
-  selectedWalletId: number | null
+  onPress: (walletId: number, walletName: string) => void;
+  wallets: Wallets[];
+  selectedWalletId: number | null;
 }) => {
-  const currency = useAppStore((state) => state.currency)
-  const wallets = useWalletStore((state) => state.wallets)
+  const currency = useAppStore((state) => state.currency);
 
   // Get device width to determine layout
-  const deviceWidth = Dimensions.get('window').width
+  const deviceWidth = Dimensions.get("window").width;
   // Adjust number of columns dynamically
-  const numColumns = deviceWidth < 400 ? 1 : 2 // 1 column for smaller devices, 2 for larger
-  const tileSize = deviceWidth / numColumns - 24 // Subtract padding
+  const numColumns = deviceWidth < 400 ? 1 : 2; // 1 column for smaller devices, 2 for larger
+  const tileSize = deviceWidth / numColumns - 24; // Subtract padding
 
   return (
     <View style={{ flex: 1 }}>
@@ -31,7 +32,7 @@ const SelectWallet = ({
         <Text
           style={{
             fontSize: FONT_SIZE.PARAGRAPH,
-            fontWeight: '600',
+            fontWeight: "600",
             marginBottom: 12,
           }}
         >
@@ -40,24 +41,21 @@ const SelectWallet = ({
         {wallets.length === 0 ? (
           <View
             style={{
-              height: '70%',
-              alignItems: 'center',
-              justifyContent: 'center',
+              height: "70%",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            <Link
-              href="/(tabs)/wallet"
-              replace
-            >
-              <Text style={{ color: '#4c8df5' }}>Add Wallet</Text>
+            <Link href="/(tabs)/wallet" replace>
+              <Text style={{ color: "#4c8df5" }}>Add Wallet</Text>
             </Link>
             <Text style={{ marginTop: 8 }}>No wallets available</Text>
           </View>
         ) : (
           <BottomSheetScrollView
             contentContainerStyle={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
+              flexDirection: "row",
+              flexWrap: "wrap",
               gap: 6,
             }}
           >
@@ -76,7 +74,7 @@ const SelectWallet = ({
         )}
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default SelectWallet
+export default SelectWallet;

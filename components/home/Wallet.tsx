@@ -10,7 +10,6 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { formatCurrency } from "react-native-format-currency";
 import { useAppStore } from "@/store/appStore";
 import { EXPENSE_COLOR, INCOME_COLOR } from "@/constants/Colors";
-import { useHomeContext } from "@/context/useHomeContext";
 
 interface WalletSummary {
   income: number;

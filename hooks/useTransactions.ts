@@ -2,13 +2,13 @@ import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
 import * as schema from "@/db/schema";
 import { useCallback } from "react";
-import { and, eq, isNotNull, sql, sum } from "drizzle-orm";
+import { and, asc, desc, eq, isNotNull, sql, sum } from "drizzle-orm";
 
 export function useTransactions() {
   const db = useSQLiteContext();
   const drizzleDb = drizzle(db, { schema });
 
-  const fetchTransactions = useCallback(async () => {
+  const getActiveWalletTransactions = useCallback(async () => {
     const activeWallet = await drizzleDb.query.wallet.findFirst({
       where: isNotNull(schema.wallet.active_at),
     });
@@ -16,6 +16,7 @@ export function useTransactions() {
     return await drizzleDb.query.transactions.findMany({
       where: eq(schema.transactions.wallet_id, activeWallet?.id!),
       with: { category: true },
+      orderBy: [desc(schema.transactions.created_at)],
     });
   }, []);
 
@@ -41,14 +42,15 @@ export function useTransactions() {
     }
   };
 
-  // TODO: Check how to pass params using Tanstack Query
-  const getWalletSummary = async (id: number) => {
+  const getWalletSummary = async (id?: number) => {
+    if (id === undefined) return { expense: 0, income: 0 };
+
     const [totalIncome] = await drizzleDb
       .select({ total: sum(schema.transactions.amount) })
       .from(schema.transactions)
       .where(
         and(
-          eq(schema.transactions.wallet_id, id),
+          eq(schema.transactions.wallet_id, id!),
           eq(schema.transactions.type, "income"),
         ),
       );
@@ -58,10 +60,12 @@ export function useTransactions() {
       .from(schema.transactions)
       .where(
         and(
-          eq(schema.transactions.wallet_id, id),
+          eq(schema.transactions.wallet_id, id!),
           eq(schema.transactions.type, "expense"),
         ),
       );
+
+    return { expense: totalExpense?.total, income: totalIncome.total };
   };
 
   const deleteTransaction = async (id: number) => {
@@ -88,7 +92,7 @@ export function useTransactions() {
   };
 
   return {
-    fetchTransactions,
+    getActiveWalletTransactions,
     getWalletSummary,
     handleDelete,
     handleSetActive,

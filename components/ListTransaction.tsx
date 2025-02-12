@@ -13,7 +13,7 @@ import Reanimated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { getIcon } from "@/lib/helpers/getIcon";
-import { EXPENSE_COLOR, INCOME_COLOR } from "@/constants/Colors";
+import { Colors, EXPENSE_COLOR, INCOME_COLOR } from "@/constants/Colors";
 
 const OPTION_WIDTH = 80;
 
@@ -33,7 +33,6 @@ const RightAction = (
     <Reanimated.View style={[styleAnimation, { paddingLeft: 20 }]}>
       <TouchableOpacity
         style={[
-          styles.rightAction,
           {
             backgroundColor: "#d32f2f",
             height: "100%",
@@ -54,9 +53,11 @@ const RightAction = (
 const ListTransaction = ({
   transaction,
   onDelete,
+  type = "secondaryBackground",
 }: {
   transaction: TransactionsWithCategory;
   onDelete: (id: number) => Promise<void>;
+  type?: keyof typeof Colors.light & keyof typeof Colors.dark;
 }) => {
   const { category } = transaction;
 
@@ -85,11 +86,15 @@ const ListTransaction = ({
             gap: 4,
             marginVertical: 12,
           }}
-          type="secondaryBackground"
+          type={type}
         >
           <View
-            style={{ flexDirection: "row", gap: 12, alignItems: "center" }}
-            type="secondaryBackground"
+            style={{
+              flexDirection: "row",
+              gap: 12,
+              alignItems: "center",
+            }}
+            type={type}
           >
             {getIcon({
               icon: category?.icon!,
@@ -97,7 +102,7 @@ const ListTransaction = ({
               color,
               size: 22,
             })}
-            <View style={{ gap: 3 }} type="secondaryBackground">
+            <View style={{ gap: 3 }} type={type}>
               <Text style={{ fontSize: FONT_SIZE.PARAGRAPH }}>
                 {transaction.category?.category}
               </Text>
@@ -106,7 +111,7 @@ const ListTransaction = ({
               </Text>
             </View>
           </View>
-          <View style={{ flex: 1, gap: 3 }} type="secondaryBackground">
+          <View style={{ flex: 1, gap: 3 }} type={type}>
             <Text
               style={[
                 {
@@ -139,7 +144,3 @@ const ListTransaction = ({
 };
 
 export default ListTransaction;
-
-const styles = StyleSheet.create({
-  rightAction: {},
-});
