@@ -22,7 +22,7 @@ const Page = () => {
 
   const walletId = wallet?.id;
 
-  const { data: summary } = useQuery({
+  const { data: summary, isLoading } = useQuery({
     queryKey: ["wallet-summary", walletId],
     queryFn: async () => await getWalletSummary(walletId),
     enabled: walletId !== undefined,
@@ -35,7 +35,12 @@ const Page = () => {
     >
       <View style={defaultStyles.container}>
         <UserHeading />
-        <Wallet wallet={wallet} currency={currency} summary={summary} />
+        <Wallet
+          wallet={wallet}
+          currency={currency}
+          summary={summary}
+          isLoading={isLoading}
+        />
       </View>
       <Transactions transactions={wallet?.transactions} />
     </SafeAreaView>

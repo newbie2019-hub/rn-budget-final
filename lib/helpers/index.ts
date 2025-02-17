@@ -1,18 +1,31 @@
-export const formatDate = (timestamp: Date | null) => {
+export const formatDate = (
+  timestamp: Date | null,
+  formatType: "default" | "short" = "default",
+) => {
   if (!timestamp) return "";
 
   const date = new Date(timestamp);
+
+  if (formatType === "short") {
+    return (
+      date.toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      }) + ` (${date.toLocaleString("en-US", { weekday: "short" })})`
+    );
+  }
+
   return date.toLocaleString("en-US", {
-    weekday: "short", // Abbreviated weekday (e.g., Mon)
-    month: "short", // Abbreviated month (e.g., Jan)
-    day: "2-digit", // Two-digit day
-    year: "numeric", // Full year (e.g., 2025)
-    hour: "numeric", // Hour in 12-hour format
-    minute: "2-digit", // Two-digit minutes
-    hour12: true, // Enable 12-hour format
+    weekday: "short",
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
   });
 };
-
 export const headingDate = (timestamp: string | number | Date): string => {
   const date = new Date(timestamp);
   const today = new Date();

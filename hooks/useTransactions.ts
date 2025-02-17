@@ -65,7 +65,7 @@ export function useTransactions() {
         ),
       );
 
-    return { expense: totalExpense?.total, income: totalIncome.total };
+    return { expense: +totalExpense?.total!, income: +totalIncome.total! };
   };
 
   const deleteTransaction = async (id: number) => {

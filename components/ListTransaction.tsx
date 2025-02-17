@@ -54,10 +54,12 @@ const ListTransaction = ({
   transaction,
   onDelete,
   type = "secondaryBackground",
+  formatType = "default",
 }: {
   transaction: TransactionsWithCategory;
   onDelete: (id: number) => Promise<void>;
   type?: keyof typeof Colors.light & keyof typeof Colors.dark;
+  formatType?: "default" | "short";
 }) => {
   const { category } = transaction;
 
@@ -107,7 +109,7 @@ const ListTransaction = ({
                 {transaction.category?.category}
               </Text>
               <Text style={{ color: "gray", fontSize: FONT_SIZE.CHIP }}>
-                {formatDate(transaction?.created_at)}
+                {formatDate(transaction?.created_at, formatType)}
               </Text>
             </View>
           </View>

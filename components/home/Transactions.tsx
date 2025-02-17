@@ -10,6 +10,7 @@ import { TransactionsWithCategory } from "@/db/schema";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useTransactions } from "@/hooks/useTransactions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Link } from "expo-router";
 
 const BORDER_RADIUS = 14;
 
@@ -90,7 +91,9 @@ const Transactions = ({
           <Text style={{ fontSize: FONT_SIZE.PARAGRAPH }}>
             Recent Transactions
           </Text>
-          <Text style={{ fontSize: FONT_SIZE.PARAGRAPH }}>View All</Text>
+          <Link href={"/wallet"}>
+            <Text style={{ fontSize: FONT_SIZE.PARAGRAPH }}>View All</Text>
+          </Link>
         </View>
 
         {transactions?.length === 0 ? (

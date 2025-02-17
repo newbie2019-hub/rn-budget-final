@@ -69,6 +69,7 @@ const Transactions = ({
                       transaction={item}
                       type="background"
                       onDelete={removeTransaction}
+                      formatType="short"
                     />
                   )}
                   renderSectionHeader={({ section: { date } }) => (

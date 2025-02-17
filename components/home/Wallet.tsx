@@ -20,10 +20,12 @@ const Wallet = ({
   wallet,
   currency,
   summary,
+  isLoading,
 }: {
   wallet?: schema.Wallets;
   currency: string;
-  summary: WalletSummary;
+  summary?: WalletSummary;
+  isLoading: boolean;
 }) => {
   const color = useThemeColor({}, "text");
   const textSecondary = useThemeColor({}, "textSecondary");

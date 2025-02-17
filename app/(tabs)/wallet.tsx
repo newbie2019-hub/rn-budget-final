@@ -125,7 +125,7 @@ const Wallet = () => {
                   Add Wallet
                 </Text>
               </View>
-            </TouchableOpacity>{" "}
+            </TouchableOpacity>
             <Animated.FlatList
               data={wallets}
               renderItem={({ item }) => (
