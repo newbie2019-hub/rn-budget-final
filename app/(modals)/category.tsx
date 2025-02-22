@@ -1,32 +1,35 @@
-import { View, Text, TouchableOpacity } from 'react-native'
-import { categories } from '@/lib/dummy-data'
-import { FONT_SIZE } from '@/constants/styling'
+import CategoryList from "@/components/category/CategoryList";
+import { Text, View } from "@/components/themed";
+import { useCategories } from "@/hooks/useCategories";
+import { useQuery } from "@tanstack/react-query";
+import { TouchableOpacity } from "react-native";
 
 const Category = () => {
-  return (
-    <View>
-      {categories.map((categ) => (
-        <View key={categ.id}>
-          <Text style={{ fontSize: FONT_SIZE.PARAGRAPH }}>
-            {categ.category}
-          </Text>
-          <View style={{ flexDirection: 'row', gap: 4 }}>
-            {categ.categories.length > 0 ? (
-              categ.categories.map((sub) => (
-                <TouchableOpacity key={sub.id}>
-                  <Text>{sub.category}</Text>
-                </TouchableOpacity>
-              ))
-            ) : (
-              <View>
-                <Text>No Categories Available</Text>
-              </View>
-            )}
-          </View>
-        </View>
-      ))}
-    </View>
-  )
-}
+  const { getCategories } = useCategories();
 
-export default Category
+  const { data: categories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+  });
+
+  return (
+    <View style={{ flex: 1 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingHorizontal: 20,
+          paddingTop: 20,
+        }}
+      >
+        <Text>Manage Categories</Text>
+        <TouchableOpacity>
+          <Text>New Category</Text>
+        </TouchableOpacity>
+      </View>
+      <CategoryList categories={categories} />
+    </View>
+  );
+};
+
+export default Category;

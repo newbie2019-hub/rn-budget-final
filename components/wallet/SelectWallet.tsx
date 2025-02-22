@@ -13,10 +13,12 @@ const SelectWallet = ({
   onPress,
   wallets,
   selectedWalletId,
+  isLoading,
 }: {
   onPress: (walletId: number, walletName: string) => void;
-  wallets: Wallets[];
+  wallets: Wallets[] | undefined;
   selectedWalletId: number | null;
+  isLoading: boolean;
 }) => {
   const currency = useAppStore((state) => state.currency);
 
@@ -38,7 +40,7 @@ const SelectWallet = ({
         >
           Select Wallet
         </Text>
-        {wallets.length === 0 ? (
+        {wallets!.length === 0 ? (
           <View
             style={{
               height: "70%",
@@ -59,7 +61,7 @@ const SelectWallet = ({
               gap: 6,
             }}
           >
-            {wallets.map((wallet) => (
+            {wallets!.map((wallet) => (
               <CardWallet
                 key={wallet.id}
                 theme={wallet.theme as keyof typeof Colors.cards}

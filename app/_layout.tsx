@@ -1,55 +1,62 @@
-import { Suspense, useEffect } from 'react'
-import { ActivityIndicator } from 'react-native'
+import { Suspense, useEffect } from "react";
+import { ActivityIndicator } from "react-native";
 
-import { Stack } from 'expo-router'
-import * as SQLite from 'expo-sqlite'
+import { Stack } from "expo-router";
+import * as SQLite from "expo-sqlite";
 
-import { useThemeColor } from '@/hooks/useThemeColor'
+import { useThemeColor } from "@/hooks/useThemeColor";
 
-import { Text, View } from '@/components/themed'
+import { Text, View } from "@/components/themed";
 
-import { useDrizzleStudio } from 'expo-drizzle-studio-plugin'
-import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator'
-import migrations from '@/drizzle/migrations'
-import { drizzle } from 'drizzle-orm/expo-sqlite'
-import { addCategoryData } from '@/db/addDummyData'
-import { StatusBar } from 'expo-status-bar'
+import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
+import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
+import migrations from "@/drizzle/migrations";
+import { drizzle } from "drizzle-orm/expo-sqlite";
+import {
+  addCategoryData,
+  addWalletData,
+  addTransactionsData,
+} from "@/db/addDummyData";
+import { StatusBar } from "expo-status-bar";
 
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
-const DB_NAME = 'budget_app'
+const DB_NAME = "budget_app";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
-  const expo = SQLite.openDatabaseSync(DB_NAME)
-  const db = drizzle(expo)
+  const expo = SQLite.openDatabaseSync(DB_NAME);
+  const db = drizzle(expo);
 
-  useDrizzleStudio(expo)
+  useDrizzleStudio(expo);
 
-  const { success, error } = useMigrations(db, migrations)
-  const background = useThemeColor({}, 'background')
+  const { success, error } = useMigrations(db, migrations);
+  const background = useThemeColor({}, "background");
+  const color = useThemeColor({}, "text");
 
   useEffect(() => {
     if (success) {
-      addCategoryData(db)
+      addCategoryData(db);
+      addTransactionsData(db);
+      addWalletData(db);
     }
-  }, [success])
+  }, [success]);
 
   if (error) {
     return (
-      <View style={{ flex: 1, backgroundColor: 'red' }}>
+      <View style={{ flex: 1, backgroundColor: "red" }}>
         <Text>Migration error: {error.message}</Text>
       </View>
-    )
+    );
   }
 
   if (!success) {
     return (
-      <View style={{ flex: 1, backgroundColor: 'red' }}>
+      <View style={{ flex: 1, backgroundColor: "red" }}>
         <Text>Migration is in progress...</Text>
       </View>
-    )
+    );
   }
 
   return (
@@ -72,77 +79,81 @@ export default function RootLayout() {
                 headerShown: false,
               }}
             />
-            <Stack.Screen
-              name="index"
-              options={{ title: 'Home' }}
-            />
+            <Stack.Screen name="index" options={{ title: "Home" }} />
             <Stack.Screen
               name="(modals)/new-transaction"
               options={{
-                title: 'New Transaction',
+                title: "New Transaction",
                 headerShown: false,
-                presentation: 'modal',
+                presentation: "modal",
               }}
             />
             <Stack.Screen
               name="(modals)/change-wallet"
               options={{
-                title: 'Select Wallet',
-                presentation: 'modal',
+                title: "Select Wallet",
+                presentation: "modal",
               }}
             />
             <Stack.Screen
               name="(modals)/category"
               options={{
-                title: 'Categories',
-                presentation: 'modal',
+                title: "Categories",
+                headerBackVisible: true,
+                headerBackTitle: "Account",
+                headerTitleStyle: {
+                  color: color,
+                },
+                headerStyle: {
+                  backgroundColor: background,
+                },
               }}
             />
             <Stack.Screen
               name="(modals)/add-wallet"
               options={{
-                title: 'Add Account',
-                presentation: 'modal',
+                title: "Add Account",
+                presentation: "modal",
                 headerShown: false,
               }}
             />
             <Stack.Screen
               name="(modals)/reminders"
               options={{
-                title: 'Reminders',
-                presentation: 'modal',
+                title: "Reminders",
+                presentation: "modal",
                 headerShown: false,
               }}
             />
             <Stack.Screen
               name="(modals)/about"
               options={{
-                title: 'About Kaperas',
-                presentation: 'modal',
+                title: "About Kaperas",
+                presentation: "modal",
                 headerShown: false,
               }}
             />
             <Stack.Screen
               name="(modals)/support/feedback"
               options={{
-                title: 'Feedback',
-                presentation: 'modal',
+                title: "Feedback",
+                presentation: "modal",
                 headerShown: false,
               }}
             />
             <Stack.Screen
               name="(modals)/support/feature-request"
               options={{
-                title: 'Feature Request',
-                presentation: 'modal',
+                title: "Feature Request",
+                presentation: "modal",
                 headerShown: false,
               }}
             />
             <Stack.Screen
               name="(modals)/account/currency-selection"
               options={{
-                title: 'Select Currency',
-                presentation: 'modal',
+                title: "Select Currency",
+                presentation: "modal",
                 headerShown: false,
               }}
             />
@@ -150,5 +161,5 @@ export default function RootLayout() {
         </SQLite.SQLiteProvider>
       </QueryClientProvider>
     </Suspense>
-  )
+  );
 }

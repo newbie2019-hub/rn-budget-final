@@ -1,73 +1,61 @@
-import { TextInput, ScrollView, Dimensions } from 'react-native'
-import React, { useCallback, useState } from 'react'
-import { FONT_SIZE } from '@/constants/styling'
-import ListOption from '@/components/transaction/ListOption'
-import { Ionicons } from '@expo/vector-icons'
-import FontAwesome from '@expo/vector-icons/FontAwesome'
-import Button from '@/components/Button'
-import { useRouter } from 'expo-router'
-import { View, Text } from '@/components/themed'
-import { useThemeColor, useWalletTheme } from '@/hooks/useThemeColor'
-import ThemePicker from '@/components/wallet/ThemePicker'
-import { Colors } from '@/constants/Colors'
-import { useSQLiteContext } from 'expo-sqlite'
-import { drizzle } from 'drizzle-orm/expo-sqlite'
-import * as schema from '@/db/schema'
-import { count } from 'drizzle-orm'
-import { formatCurrency } from 'react-native-format-currency'
-import { useAppStore } from '@/store/appStore'
+import { TextInput, ScrollView, Dimensions } from "react-native";
+import React, { useCallback, useState } from "react";
+import { FONT_SIZE } from "@/constants/styling";
+import ListOption from "@/components/transaction/ListOption";
+import { Ionicons } from "@expo/vector-icons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Button from "@/components/Button";
+import { View, Text } from "@/components/themed";
+import { useThemeColor, useWalletTheme } from "@/hooks/useThemeColor";
+import ThemePicker from "@/components/wallet/ThemePicker";
+import { Colors } from "@/constants/Colors";
+import { formatCurrency } from "react-native-format-currency";
+import { useAppStore } from "@/store/appStore";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useWallets } from "@/hooks/useWallets";
 
-const NewTransaction = () => {
-  const width = Dimensions.get('window').width
+const AddWallet = () => {
+  const queryClient = useQueryClient();
+  const width = Dimensions.get("window").width;
 
-  const router = useRouter()
-  const db = useSQLiteContext()
-  const drizzleDb = drizzle(db, { schema })
+  const [theme, setTheme] = useState<keyof typeof Colors.cards>("celadon");
+  const [amount, setAmount] = useState("");
+  const [walletName, setWalletName] = useState("");
+  const [notes, setNotes] = useState("");
 
-  const [theme, setTheme] = useState<keyof typeof Colors.cards>('celadon')
-  const [amount, setAmount] = useState('')
-  const [walletName, setWalletName] = useState('')
-  const [notes, setNotes] = useState('')
+  const textColor = useThemeColor({}, "text");
+  const color = useThemeColor({}, "placeholder");
+  const textSecondary = useThemeColor({}, "textSecondary");
+  const selectedTheme = useWalletTheme(theme);
 
-  const textColor = useThemeColor({}, 'text')
-  const color = useThemeColor({}, 'placeholder')
-  const textSecondary = useThemeColor({}, 'textSecondary')
-  const selectedTheme = useWalletTheme(theme)
-
-  const currency = useAppStore((state) => state.currency)
+  const currency = useAppStore((state) => state.currency);
+  const { saveWallet } = useWallets();
 
   const [valWithSymbol, valWithoutSymbol, symbol] = formatCurrency({
     amount: Number(amount || 0),
     code: currency,
-  })
+  });
 
-  const onSubmit = useCallback(async () => {
-    try {
-      // Check if there is a wallet that has an active state
-      const [result] = await drizzleDb
-        .select({ count: count() })
-        .from(schema.wallet)
-
-      const wallet: Omit<schema.Wallets, 'id' | 'updated_at' | 'deleted_at'> = {
+  const { mutateAsync: saveAccount } = useMutation({
+    mutationFn: () => {
+      return saveWallet({
         wallet: walletName,
         amount: +amount,
-        notes: notes,
-        theme: theme,
+        notes,
+        theme,
         created_at: new Date(),
         active_at: null,
-      }
-
-      if (result.count === 0) {
-        wallet.active_at = new Date()
-      }
-
-      await drizzleDb.insert(schema.wallet).values(wallet)
-    } catch (error) {
-      console.log('Error saving wallet: ', error)
-    }
-
-    router.back()
-  }, [amount, notes, theme, walletName])
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["wallet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["wallets"],
+      });
+    },
+  });
 
   return (
     <ScrollView
@@ -78,17 +66,17 @@ const NewTransaction = () => {
         <View
           style={{
             height: 5,
-            backgroundColor: 'gray',
+            backgroundColor: "gray",
             width: 40,
             borderRadius: 20,
             marginTop: 8,
-            marginHorizontal: 'auto',
+            marginHorizontal: "auto",
           }}
         ></View>
         <Text
           style={{
             fontSize: FONT_SIZE.DESCRIPTION,
-            textAlign: 'center',
+            textAlign: "center",
             marginTop: 8,
             color: textSecondary,
           }}
@@ -100,15 +88,15 @@ const NewTransaction = () => {
           style={{
             paddingHorizontal: 20,
             flex: 1,
-            justifyContent: 'space-between',
+            justifyContent: "space-between",
           }}
         >
           <View style={{ marginTop: 40 }}>
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'flex-end',
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "flex-end",
               }}
             >
               <Text style={{ marginBottom: 10, fontSize: FONT_SIZE.LG }}>
@@ -130,7 +118,7 @@ const NewTransaction = () => {
             <Text
               style={{
                 fontSize: FONT_SIZE.PARAGRAPH,
-                textAlign: 'center',
+                textAlign: "center",
                 marginTop: 4,
                 color: textColor,
               }}
@@ -148,31 +136,24 @@ const NewTransaction = () => {
                       backgroundColor: selectedTheme.background,
                       borderRadius: 40,
                       borderWidth: 1,
-                      borderColor: 'white',
+                      borderColor: "white",
                     }}
                   ></View>
                 }
                 label="THEME"
-                value={'Main Wallet'}
+                value={"Main Wallet"}
                 renderItem={
                   <View style={{ marginTop: 2 }}>
-                    <ThemePicker
-                      theme={theme}
-                      onSelect={setTheme}
-                    />
+                    <ThemePicker theme={theme} onSelect={setTheme} />
                   </View>
                 }
               />
               <ListOption
                 icon={
-                  <Ionicons
-                    name="wallet-outline"
-                    size={20}
-                    color={'gray'}
-                  />
+                  <Ionicons name="wallet-outline" size={20} color={"gray"} />
                 }
                 label="ACCOUNT"
-                value={'Main Wallet'}
+                value={"Main Wallet"}
                 renderItem={
                   <TextInput
                     value={walletName}
@@ -189,14 +170,10 @@ const NewTransaction = () => {
               />
               <ListOption
                 icon={
-                  <FontAwesome
-                    name="sticky-note-o"
-                    size={20}
-                    color="gray"
-                  />
+                  <FontAwesome name="sticky-note-o" size={20} color="gray" />
                 }
                 label="NOTES"
-                value={'Medicine for cough'}
+                value={"Medicine for cough"}
                 renderItem={
                   <TextInput
                     value={notes}
@@ -215,14 +192,11 @@ const NewTransaction = () => {
           </View>
 
           {/* Save Transaction */}
-          <Button
-            label="SAVE ACCOUNT"
-            onPress={onSubmit}
-          />
+          <Button label="SAVE ACCOUNT" onPress={saveAccount} />
         </View>
       </View>
     </ScrollView>
-  )
-}
+  );
+};
 
-export default NewTransaction
+export default AddWallet;

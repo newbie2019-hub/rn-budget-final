@@ -59,7 +59,12 @@ const Wallet = () => {
 
   const { data: wallets, isLoading: isWalletsLoading } = useQuery({
     queryKey: ["wallets"],
-    queryFn: getWallets,
+    queryFn: async () => {
+      const wallets = await getWallets();
+      return wallets.sort(
+        (a, b) => (b.active_at ? 1 : 0) - (a.active_at ? 1 : 0),
+      );
+    },
   });
 
   const { mutateAsync: deleteWallet } = useMutation({
@@ -103,55 +108,70 @@ const Wallet = () => {
       <SafeAreaView style={{ flex: 1, backgroundColor: bgColor }}>
         <View style={[defaultStyles.container]}>
           <Text style={{ fontSize: FONT_SIZE.HEADING }}>Wallets</Text>
-          <View style={{ flexDirection: "row", gap: 8 }}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => router.push("/(modals)/add-wallet")}
-              style={{ height: "100%" }}
-            >
-              <View
-                style={{
-                  height: 200,
-                  width: 120,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginVertical: 14,
-                  borderRadius: 10,
-                }}
-                type="secondaryBackground"
+
+          {!isWalletsLoading && wallets && wallets?.length > 0 && (
+            <View style={{ flexDirection: "row", gap: 8 }}>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => router.push("/(modals)/add-wallet")}
+                style={{ height: "100%" }}
               >
-                <Ionicons name="wallet-outline" size={24} color={color} />
-                <Text style={{ marginTop: 4, fontSize: FONT_SIZE.DESCRIPTION }}>
-                  Add Wallet
-                </Text>
-              </View>
-            </TouchableOpacity>
-            <Animated.FlatList
-              data={wallets}
-              renderItem={({ item }) => (
-                <CardWallet
-                  key={item.id}
-                  theme={item.theme as keyof typeof Colors.cards}
-                  wallet={item}
-                  onDelete={() => deleteWallet(item.id)}
-                  onUpdate={handleUpdate}
-                  onSetActive={() => setActive(item.id)}
-                  currency={currency}
-                  width={160}
-                  showActive
-                />
-              )}
-              horizontal={true}
-              contentContainerStyle={{ gap: 8, marginVertical: 14 }}
-              showsHorizontalScrollIndicator={false}
-              itemLayoutAnimation={LinearTransition}
-            />
-          </View>
+                <View
+                  style={{
+                    height: 200,
+                    width: 120,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginVertical: 14,
+                    borderRadius: 10,
+                  }}
+                  type="secondaryBackground"
+                >
+                  <Ionicons name="wallet-outline" size={24} color={color} />
+                  <Text
+                    style={{ marginTop: 4, fontSize: FONT_SIZE.DESCRIPTION }}
+                  >
+                    Add Wallet
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <Animated.FlatList
+                data={wallets}
+                renderItem={({ item }) => (
+                  <CardWallet
+                    key={item.id}
+                    theme={item.theme as keyof typeof Colors.cards}
+                    wallet={item}
+                    onDelete={() => deleteWallet(item.id)}
+                    onUpdate={handleUpdate}
+                    onSetActive={() => setActive(item.id)}
+                    currency={currency}
+                    width={160}
+                    showActive
+                  />
+                )}
+                horizontal={true}
+                contentContainerStyle={{ gap: 8, marginVertical: 14 }}
+                showsHorizontalScrollIndicator={false}
+                itemLayoutAnimation={LinearTransition}
+              />
+            </View>
+          )}
+
+          {!isWalletsLoading && wallets && wallets?.length > 0 && (
+            <View style={{ height: "100%" }}>
+              <Transactions
+                isLoading={isTransactionsLoading}
+                transactions={transactions}
+                removeTransaction={removeTransaction}
+              />
+            </View>
+          )}
 
           {!isWalletsLoading && wallets?.length === 0 && (
             <View
               style={{
-                height: "70%",
+                height: "95%",
                 alignItems: "center",
                 justifyContent: "center",
               }}
@@ -162,13 +182,6 @@ const Wallet = () => {
               <Text style={{ marginTop: 12 }}>No Wallet Added</Text>
             </View>
           )}
-          <View style={{ height: "100%" }}>
-            <Transactions
-              isLoading={isTransactionsLoading}
-              transactions={transactions}
-              removeTransaction={removeTransaction}
-            />
-          </View>
         </View>
       </SafeAreaView>
     </GestureHandlerRootView>

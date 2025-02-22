@@ -25,10 +25,11 @@ import { Transaction, TransactionAction } from "@/types";
 import { useAppStore } from "@/store/appStore";
 import { formatCurrency } from "react-native-format-currency";
 import SelectWallet from "@/components/wallet/SelectWallet";
-import SelectCategory from "@/components/category/SelectCategory";
+import CategoryList from "@/components/category/CategoryList";
 import { useQuery } from "@tanstack/react-query";
 import { useWallets } from "@/hooks/useWallets";
 import { useCategories } from "@/hooks/useCategories";
+import { useTransactions } from "@/hooks/useTransactions";
 
 const reducer = (
   state: Transaction,
@@ -59,7 +60,8 @@ const NewTransaction = () => {
   const textColor = useThemeColor({}, "text");
   const color = useThemeColor({}, "placeholder");
 
-  const { getWallets, storeWallet } = useWallets();
+  const { getWallets } = useWallets();
+  const { storeTransaction } = useTransactions();
   const { getCategories } = useCategories();
 
   const selectCategoryRef = useRef<BottomSheetModal>(null);
@@ -84,12 +86,12 @@ const NewTransaction = () => {
     code: currency,
   });
 
-  const { data: categories } = useQuery({
+  const { data: categories, isLoading: isCategoryLoading } = useQuery({
     queryKey: ["categories"],
     queryFn: getCategories,
   });
 
-  const { data: wallets } = useQuery({
+  const { data: wallets, isLoading: isWalletsLoading } = useQuery({
     queryKey: ["wallet"],
     queryFn: getWallets,
   });
@@ -107,7 +109,7 @@ const NewTransaction = () => {
       created_at: new Date(),
     };
 
-    await storeWallet(state, transaction);
+    await storeTransaction(state, transaction);
     router.back();
   };
 
@@ -262,6 +264,7 @@ const NewTransaction = () => {
         <BottomSheet ref={selectWalletRef} snapPoints={["30%", "65%", "95%"]}>
           <SelectWallet
             wallets={wallets}
+            isLoading={isWalletsLoading}
             selectedWalletId={state.walletId}
             onPress={(walletId: number, walletName: string) => {
               dispatch({ type: "setWalletId", payload: walletId });
@@ -272,9 +275,10 @@ const NewTransaction = () => {
         </BottomSheet>
 
         <BottomSheet ref={selectCategoryRef} snapPoints={["30%", "65%", "95%"]}>
-          <SelectCategory
+          <CategoryList
             selectedCategory={state.categoryId}
             categories={categories}
+            isLoading={isCategoryLoading}
             onPress={(category: schema.Categories) => {
               dispatch({ type: "setCategoryId", payload: category.id });
               setCategoryName(category.category);

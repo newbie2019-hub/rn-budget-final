@@ -2,8 +2,9 @@ import { useCallback } from "react";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
 import * as schema from "@/db/schema";
-import { desc, isNotNull, sql } from "drizzle-orm";
-import { Transaction } from "@/types";
+import { router } from "expo-router";
+import { count, desc, isNotNull } from "drizzle-orm";
+import { WalletForm } from "../types";
 
 export function useWallets() {
   const db = useSQLiteContext();
@@ -34,27 +35,24 @@ export function useWallets() {
     [],
   );
 
-  const storeWallet = async (
-    state: Transaction,
-    transaction: Omit<schema.Transactions, "id" | "updated_at" | "deleted_at">,
-  ) => {
+  const saveWallet = async (wallet: WalletForm) => {
     try {
-      await drizzleDb
+      // Check if there is a wallet that has an active state
+      const [result] = await drizzleDb
+        .select({ count: count() })
+        .from(schema.wallet);
 
-        .update(schema.wallet)
-        .set({
-          amount:
-            state.type === "income"
-              ? sql`${schema.wallet.amount} + ${state.amount}`
-              : sql`${schema.wallet.amount} - ${state.amount}`,
-        })
-        .where(isNotNull(schema.wallet.active_at));
+      if (result.count === 0) {
+        wallet.active_at = new Date();
+      }
 
-      await drizzleDb.insert(schema.transactions).values(transaction);
+      await drizzleDb.insert(schema.wallet).values(wallet);
     } catch (error) {
       console.log("Error saving wallet: ", error);
     }
+
+    router.back();
   };
 
-  return { getWallets, getActiveWallet, storeWallet };
+  return { getWallets, getActiveWallet, saveWallet };
 }

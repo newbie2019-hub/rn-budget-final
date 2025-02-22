@@ -1,8 +1,9 @@
 import { drizzle } from "drizzle-orm/expo-sqlite";
+import { useCallback } from "react";
 import { useSQLiteContext } from "expo-sqlite";
 import * as schema from "@/db/schema";
-import { useCallback } from "react";
-import { and, asc, desc, eq, isNotNull, sql, sum } from "drizzle-orm";
+import { and, desc, eq, isNotNull, sql, sum } from "drizzle-orm";
+import { Transaction } from "@/types";
 
 export function useTransactions() {
   const db = useSQLiteContext();
@@ -22,6 +23,12 @@ export function useTransactions() {
 
   const handleDelete = async (id: number) => {
     await drizzleDb.delete(schema.wallet).where(eq(schema.wallet.id, id));
+  };
+
+  const resetUserData = async () => {
+    await drizzleDb.delete(schema.categories);
+    await drizzleDb.delete(schema.wallet);
+    await drizzleDb.delete(schema.transactions);
   };
 
   const handleUpdate = async () => {};
@@ -91,6 +98,28 @@ export function useTransactions() {
     }
   };
 
+  const storeTransaction = async (
+    state: Transaction,
+    transaction: Omit<schema.Transactions, "id" | "updated_at" | "deleted_at">,
+  ) => {
+    try {
+      await drizzleDb
+
+        .update(schema.wallet)
+        .set({
+          amount:
+            state.type === "income"
+              ? sql`${schema.wallet.amount} + ${state.amount}`
+              : sql`${schema.wallet.amount} - ${state.amount}`,
+        })
+        .where(isNotNull(schema.wallet.active_at));
+
+      await drizzleDb.insert(schema.transactions).values(transaction);
+    } catch (error) {
+      console.log("Error saving wallet: ", error);
+    }
+  };
+
   return {
     getActiveWalletTransactions,
     getWalletSummary,
@@ -98,5 +127,7 @@ export function useTransactions() {
     handleSetActive,
     handleUpdate,
     deleteTransaction,
+    resetUserData,
+    storeTransaction,
   };
 }
